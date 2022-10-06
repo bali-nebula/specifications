@@ -1,0 +1,25 @@
+$syntax: <production>
+
+$production: SYMBOL ":" rule
+
+$rule: term {"|" term}
+
+$term: <factor>
+
+$factor:
+	CATAGORY               |
+	IDENTIFIER             |
+	literal [".." literal] |
+	"~" factor             |  ! Indicates NOT the factor.
+	"(" rule ")"           |  ! Indicates that the rule is evaluated first.
+	"[' rule "]"           |  ! Indicates zero or one repetitions of the rule.
+	"{" rule "}"           |  ! Indicates zero or more repetitions of the rule.
+	"<' rule ">"              ! Indicates one or more repetitions of the rule.
+
+$literal: "'" <~"'"> "'" | '"' <~'"'> '"'
+
+$CATAGORY: "LETTER" | "DIGIT" | "WHITESPACE"  ! The Unicode codepoint catagory.
+
+$IDENTIFIER: LETTER {LETTER | DIGIT}
+
+$SYMBOL: "$" IDENTIFIER
