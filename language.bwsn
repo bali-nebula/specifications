@@ -148,7 +148,7 @@ $rejectClause: "reject" expression
 
 $retrieveClause: "retrieve" recipient "from" expression
 
-$returnClause: "return" [expression]
+$returnClause: "return" expression
 
 $saveClause: "save" expression ["as" recipient]
 
