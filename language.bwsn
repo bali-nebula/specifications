@@ -41,8 +41,6 @@ $dereferenceExpression: "@" expression
 
 $discardClause: "discard" expression
 
-$doBlock: expression "do" "{" statements "}"
-
 $document: component EOL EOF
 
 $element:
@@ -55,7 +53,7 @@ $evaluateClause: [recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression
 
 $exception: SYMBOL
 
-$exceptionClause: "on" exception <"matching" doBlock>
+$exceptionClause: "on" exception <"matching" expression "do" "{" statements "}">
 
 $expression:
 	component |
@@ -79,7 +77,7 @@ $function: IDENTIFIER
 
 $functionExpression: function "(" [arguments] ")"
 
-$ifClause: "if" doBlock
+$ifClause: "if" expression "do" "{" statements "}"
 
 $indices: expression {"," expression}
 
@@ -154,7 +152,7 @@ $returnClause: "return" [expression]
 
 $saveClause: "save" expression ["as" recipient]
 
-$selectClause: "select" expression <"matching" doBlock>
+$selectClause: "select" expression <"matching" expression "do" "{" statements "}">
 
 $sequence: catalog | list | range
 
@@ -173,9 +171,9 @@ $value: element | string | variable
 
 $variable: IDENTIFIER
 
-$whileClause: "while" doBlock
+$whileClause: "while" expression "do" "{" statements "}"
 
-$withClause: "with" ["each" item "in"] doBlock
+$withClause: "with" ["each" item "in"] expression "do" "{" statements "}"
 
 $ANGLE: "~" (REAL | ZERO)
 
