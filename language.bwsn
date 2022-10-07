@@ -142,6 +142,8 @@ $procedure: "{" statements "}"
 
 $publishClause: "publish" expression
 
+$range: [value] (".." | "..<" | "<..<" | "<..") [value]
+
 $recipient: name | attribute
 
 $rejectClause: "reject" expression
@@ -154,9 +156,7 @@ $saveClause: "save" expression ["as" recipient]
 
 $selectClause: "select" expression <"matching" doBlock>
 
-$sequence: catalog | list | slice
-
-$slice: [value] (".." | "..<" | "<..<" | "<..") [value]
+$sequence: catalog | list | range
 
 $statement: mainClause [exceptionClause]
 
