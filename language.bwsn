@@ -124,8 +124,6 @@ $name: SYMBOL
 
 $notarizeClause: "notarize" expression "as" expression
 
-$selectClause: "select" expression <"matching" doBlock>
-
 $parameter: name ":" component
 
 $parameters:
@@ -153,6 +151,8 @@ $retrieveClause: "retrieve" recipient "from" expression
 $returnClause: "return" [expression]
 
 $saveClause: "save" expression ["as" recipient]
+
+$selectClause: "select" expression <"matching" doBlock>
 
 $sequence: catalog | list | slice
 
