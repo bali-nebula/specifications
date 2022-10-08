@@ -150,7 +150,7 @@ $retrieveClause: "retrieve" recipient "from" expression
 
 $returnClause: "return" expression
 
-$saveClause: "save" expression ["as" recipient]
+$saveClause: "save" expression "as" recipient
 
 $selectClause: "select" expression <"matching" expression "do" "{" statements "}">
 
@@ -173,7 +173,7 @@ $variable: IDENTIFIER
 
 $whileClause: "while" expression "do" "{" statements "}"
 
-$withClause: "with" ["each" item "in"] expression "do" "{" statements "}"
+$withClause: "with" "each" item "in" expression "do" "{" statements "}"
 
 $ANGLE: "~" (REAL | ZERO)
 
