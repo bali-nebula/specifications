@@ -23,7 +23,7 @@ $checkoutClause: "checkout" recipient ["at" "level" expression] "from" expressio
 
 $collection: "[" sequence "]"
 
-$commentary: NOTE | COMMENT
+$annotation: NOTE | COMMENT
 
 $comparisonExpression: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -160,7 +160,7 @@ $statement: mainClause [exceptionClause]
 
 $statements:
 	statement {";" statement} |
-	EOL {(commentary | statement) EOL} |
+	EOL {(annotation | statement) EOL} |
 	! An empty procedure.
 
 $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
