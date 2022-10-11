@@ -116,7 +116,7 @@ $mainClause:
 
 $message: IDENTIFIER
 
-$messageExpression: expression ("." | "<-") message "(" [arguments] ")"
+$messageExpression: expression ("." | "<~") message "(" [arguments] ")"
 
 $name: SYMBOL
 
@@ -199,7 +199,7 @@ $DAY: "0".."2" "1".."9" | "3" "0".."1"
 
 $DELIMITER: 
     "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?" | ">" | "=" |
-    "<..<" | "<.." | "<-" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
+    "<..<" | "<.." | "<~" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
     "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
     ")" | "(" | "&"
 
