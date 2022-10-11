@@ -1,25 +1,30 @@
 $syntax: <production>
 
-$production: SYMBOL ":" rule
+$production: SYMBOL ":" rule [NOTE] <EOL>
 
-$rule: term {"|" term}
-
-$term: <factor>
+$rule: <factor> {"|" [[NOTE] EOL] <factor>}
 
 $factor:
-	CATAGORY               |
-	IDENTIFIER             |
-	literal [".." literal] |
-	"~" factor             |  ! Indicates NOT the factor.
-	"(" rule ")"           |  ! Indicates that the rule is evaluated first.
-	"[' rule "]"           |  ! Indicates zero or one repetitions of the rule.
-	"{" rule "}"           |  ! Indicates zero or more repetitions of the rule.
-	"<' rule ">"              ! Indicates one or more repetitions of the rule.
+    CATAGORY               |
+    IDENTIFIER             |
+    literal [".." literal] |
+    "~" factor             |  ! Indicates NOT the factor.
+    "(" rule ")"           |  ! Indicates that the rule is evaluated first.
+    "[' rule "]"           |  ! Indicates zero or one repetitions of the rule.
+    "{" rule "}"           |  ! Indicates zero or more repetitions of the rule.
+    "<' rule ">"              ! Indicates one or more repetitions of the rule.
 
 $literal: "'" <~"'"> "'" | '"' <~'"'> '"'
 
-$CATAGORY: "LETTER" | "DIGIT" | "WHITESPACE"  ! The Unicode codepoint catagory.
+$SYMBOL: "$" IDENTIFIER
 
 $IDENTIFIER: LETTER {LETTER | DIGIT}
 
-$SYMBOL: "$" IDENTIFIER
+$CATAGORY: "LETTER" | "DIGIT"  ! The Unicode code points catagories L and N.
+
+$NOTE: "! " {~EOL}
+
+$EOL: "\n"
+
+$SPACE: " "  ! All spaces are ignored.
+
