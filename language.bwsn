@@ -75,11 +75,11 @@ $expression:
 
 $function: IDENTIFIER
 
-$intrinsic: function "(" [arguments] ")"
-
 $ifClause: "if" expression "do" "{" statements "}"
 
 $indices: expression {"," expression}
+
+$intrinsic: function "(" [arguments] ")"
 
 $inversion: ("-" | "/" | "*") expression
 
