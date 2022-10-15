@@ -1,14 +1,14 @@
 $acceptClause: "accept" expression
 
+$annotation: NOTE | COMMENT
+
 $arguments: expression {"," expression}
 
-$arithmeticExpression: expression ("*" | "/" | "//" | "+" | "-") expression
+$arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
 $association: primitive ":" component
 
 $attribute: variable "[" indices "]"
-
-$attributeExpression: expression "[" indices "]"
 
 $breakClause: "break" "loop"
 
@@ -17,17 +17,15 @@ $catalog:
     EOL <association [NOTE] EOL> |
     ":"  ! An empty catalog.
 
-$chainExpression: expression "&" expression
+$chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ["at" "level" expression] "from" expression
 
 $collection: "[" sequence "]"
 
-$annotation: NOTE | COMMENT
+$comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
-$comparisonExpression: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
-
-$complementExpression: "NOT" expression
+$complement: "NOT" expression
 
 $component: entity [context]
 
@@ -35,9 +33,9 @@ $context: "(" parameters ")"
 
 $continueClause: "continue" "loop"
 
-$defaultExpression: expression "?" expression
+$default: expression "?" expression
 
-$dereferenceExpression: "@" expression
+$dereference: "@" expression
 
 $discardClause: "discard" expression
 
@@ -55,33 +53,37 @@ $exception: SYMBOL
 
 $exceptionClause: "on" exception <"matching" expression "do" "{" statements "}">
 
+$exponential: expression "^" expression
+
 $expression:
     component |
-    functionExpression |
+    intrinsic |
     variable |
-    precedenceExpression |
-    dereferenceExpression |
-    messageExpression |
-    attributeExpression |
-    chainExpression |
-    powerExpression |
-    inversionExpression |
-    arithmeticExpression |
-    magnitudeExpression |
-    comparisonExpression |
-    complementExpression |
-    logicalExpression |
-    defaultExpression
+    precedence |
+    dereference |
+    invocation |
+    value |
+    chaining |
+    exponential |
+    inversion |
+    arithmetic |
+    magnitude |
+    comparison |
+    complement |
+    logical |
+    default
 
 $function: IDENTIFIER
 
-$functionExpression: function "(" [arguments] ")"
+$intrinsic: function "(" [arguments] ")"
 
 $ifClause: "if" expression "do" "{" statements "}"
 
 $indices: expression {"," expression}
 
-$inversionExpression: ("-" | "/" | "*") expression
+$inversion: ("-" | "/" | "*") expression
+
+$invocation: expression ("." | "<~") message "(" [arguments] ")"
 
 $item: SYMBOL
 
@@ -90,9 +92,9 @@ $list:
     EOL <component [NOTE] EOL> |
     ! An empty list.
 
-$logicalExpression: expression ("AND" | "SANS" | "XOR" | "OR") expression
+$logical: expression ("AND" | "SANS" | "XOR" | "OR") expression
 
-$magnitudeExpression: "|" expression "|"
+$magnitude: "|" expression "|"
 
 $mainClause:
     ifClause |
@@ -116,8 +118,6 @@ $mainClause:
 
 $message: IDENTIFIER
 
-$messageExpression: expression ("." | "<~") message "(" [arguments] ")"
-
 $name: SYMBOL
 
 $notarizeClause: "notarize" expression "as" expression
@@ -130,9 +130,7 @@ $parameters:
 
 $postClause: "post" expression "to" expression
 
-$powerExpression: expression "^" expression
-
-$precedenceExpression: "(" expression ")"
+$precedence: "(" expression ")"
 
 $primitive: element | string
 
@@ -140,7 +138,7 @@ $procedure: "{" statements "}"
 
 $publishClause: "publish" expression
 
-$range: [value] (".." | "..<" | "<..<" | "<..") [value]
+$range: [primitive] (".." | "..<" | "<..<" | "<..") [primitive]
 
 $recipient: name | attribute
 
@@ -167,7 +165,7 @@ $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
 
 $throwClause: "throw" expression
 
-$value: element | string | variable
+$value: expression "[" indices "]"
 
 $variable: IDENTIFIER
 
