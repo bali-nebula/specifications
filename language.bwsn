@@ -47,11 +47,11 @@ $element:
 
 $entity: element | string | collection | procedure
 
-$evaluateClause: [recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression
+$evaluateClause: [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
 $exception: SYMBOL
 
-$exceptionClause: "on" exception <"matching" expression "do" "{" statements "}">
+$onClause: "on" exception <"matching" expression "do" "{" statements "}">
 
 $exponential: expression "^" expression
 
@@ -154,7 +154,7 @@ $selectClause: "select" expression <"matching" expression "do" "{" statements "}
 
 $sequence: catalog | list | range
 
-$statement: mainClause [exceptionClause]
+$statement: mainClause [onClause]
 
 $statements:
     statement {";" statement} |
