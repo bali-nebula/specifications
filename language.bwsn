@@ -1,4 +1,4 @@
-$acceptClause: "accept" expression
+$acceptClause: "accept" message
 
 $annotation: NOTE | COMMENT
 
@@ -10,6 +10,8 @@ $association: primitive ":" component
 
 $attribute: variable "[" indices "]"
 
+$bag: expression
+
 $breakClause: "break" "loop"
 
 $catalog:
@@ -19,15 +21,17 @@ $catalog:
 
 $chaining: expression "&" expression
 
-$checkoutClause: "checkout" recipient ["at" "level" expression] "from" expression
+$checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
 
-$collection: "[" sequence "]"
+$collection: "[" items "]"
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
 $complement: "NOT" expression
 
 $component: entity [context]
+
+$condition: expression
 
 $context: "(" parameters ")"
 
@@ -37,9 +41,9 @@ $default: expression "?" expression
 
 $dereference: "@" expression
 
-$discardClause: "discard" expression
+$discardClause: "discard" document
 
-$document: component EOL EOF
+$document: expression
 
 $element:
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
@@ -49,33 +53,32 @@ $entity: element | string | collection | procedure
 
 $evaluateClause: [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
-$exception: SYMBOL
+$event: expression
 
-$onClause: "on" exception <"matching" expression "do" "{" statements "}">
+$exception: expression
 
 $exponential: expression "^" expression
 
 $expression:
-    component |
-    intrinsic |
-    variable |
-    precedence |
-    dereference |
-    invocation |
-    value |
-    chaining |
-    exponential |
-    inversion |
-    arithmetic |
-    magnitude |
-    comparison |
-    complement |
-    logical |
-    default
+    component   |  ! entity [context] [NOTE]
+    intrinsic   |  ! function "(" [arguments] ")"
+    variable    |  ! IDENTIFIER
+    precedence  |  ! "(" expression ")"
+    dereference |  ! "@" expression
+    invocation  |  ! expression ("." | "<~") method "(" [arguments] ")"
+    value       |  ! expression "[" indices "]"
+    chaining    |  ! expression "&" expression
+    exponential |  ! expression "^" expression
+    inversion   |  ! ("-" | "/" | "*") expression
+    arithmetic  |  ! expression ("*" | "/" | "//" | "+" | "-") expression
+    magnitude   |  ! "|" expression "|"
+    comparison  |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
+    complement  |  ! "NOT" expression
+    logical        ! expression ("AND" | "SANS" | "XOR" | "OR") expression
 
 $function: IDENTIFIER
 
-$ifClause: "if" expression "do" "{" statements "}"
+$ifClause: "if" condition "do" "{" statements "}"
 
 $indices: expression {"," expression}
 
@@ -83,9 +86,11 @@ $intrinsic: function "(" [arguments] ")"
 
 $inversion: ("-" | "/" | "*") expression
 
-$invocation: expression ("." | "<~") message "(" [arguments] ")"
+$invocation: target ("." | "<~") method "(" [arguments] ")"
 
 $item: SYMBOL
+
+$items: catalog | list | range
 
 $list:
     component {"," component} |
@@ -116,11 +121,19 @@ $mainClause:
     rejectClause |
     evaluateClause
 
-$message: IDENTIFIER
+$message: expression
+
+$method: IDENTIFIER
+
+$moniker: expression
 
 $name: SYMBOL
 
-$notarizeClause: "notarize" expression "as" expression
+$notarizeClause: "notarize" document "as" moniker
+
+$onClause: "on" "$exception" <"matching" pattern "do" "{" statements "}">
+
+$ordinal: expression
 
 $parameter: name ":" component
 
@@ -128,7 +141,9 @@ $parameters:
     parameter {"," parameter} |
     EOL <parameter EOL>
 
-$postClause: "post" expression "to" expression
+$pattern: expression
+
+$postClause: "post" message "to" bag
 
 $precedence: "(" expression ")"
 
@@ -136,23 +151,27 @@ $primitive: element | string
 
 $procedure: "{" statements "}"
 
-$publishClause: "publish" expression
+$publishClause: "publish" event
 
 $range: [primitive] (".." | "..<" | "<..<" | "<..") [primitive]
 
 $recipient: name | attribute
 
-$rejectClause: "reject" expression
+$rejectClause: "reject" message
 
-$retrieveClause: "retrieve" recipient "from" expression
+$result: expression
 
-$returnClause: "return" expression
+$retrieveClause: "retrieve" recipient "from" bag
 
-$saveClause: "save" expression "as" recipient
+$returnClause: "return" result
 
-$selectClause: "select" expression <"matching" expression "do" "{" statements "}">
+$saveClause: "save" document "as" recipient
 
-$sequence: catalog | list | range
+$selectClause: "select" target <"matching" pattern "do" "{" statements "}">
+
+$sequence: expression
+
+$source: component EOL EOF  ! EOF is the end-of-file marker.
 
 $statement: mainClause [onClause]
 
@@ -163,15 +182,17 @@ $statements:
 
 $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
 
-$throwClause: "throw" expression
+$target: expression
+
+$throwClause: "throw" exception
 
 $value: expression "[" indices "]"
 
 $variable: IDENTIFIER
 
-$whileClause: "while" expression "do" "{" statements "}"
+$whileClause: "while" condition "do" "{" statements "}"
 
-$withClause: "with" "each" item "in" expression "do" "{" statements "}"
+$withClause: "with" "each" item "in" sequence "do" "{" statements "}"
 
 $ANGLE: "~" (REAL | ZERO)
 
