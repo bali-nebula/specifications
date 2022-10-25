@@ -254,7 +254,7 @@ $KEYWORD:
 
 $MINUTE: "0".."5" "0".."9"
 
-$MOMENT: "<" YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"
+$MOMENT: "<" [SIGN] YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"
 
 $MONIKER: <"/" NAME>
 
@@ -334,7 +334,7 @@ $VERSION: "v" ORDINAL {"." ORDINAL}
 
 $WEEKS: TIMESPAN "W"
 
-$YEAR: [SIGN] ORDINAL
+$YEAR: ORDINAL | ZERO
 
 $ZERO: "0"
 
