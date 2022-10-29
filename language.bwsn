@@ -15,15 +15,15 @@ $bag: expression
 $breakClause: "break" "loop"
 
 $catalog:
-    association {"," association} |
-    EOL <association [NOTE] EOL> |
-    ":"  ! An empty catalog.
+    "[" association {"," association} "]" |
+    "[" EOL <association [NOTE] EOL> "]" |
+    "[" ":" "]"  ! An empty catalog.
 
 $chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
 
-$collection: "[" items "]"
+$collection: catalog | list | range
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -90,12 +90,10 @@ $invocation: target ("." | "<~") method "(" [arguments] ")"
 
 $item: SYMBOL
 
-$items: catalog | list | range
-
 $list:
-    component {"," component} |
-    EOL <component [NOTE] EOL> |
-    ! An empty list.
+    "[" component {"," component} "]" |
+    "[" EOL <component [NOTE] EOL> "]" |
+    "[" "]"  ! An empty list.
 
 $logical: expression ("AND" | "SANS" | "XOR" | "OR") expression
 
@@ -153,7 +151,7 @@ $procedure: "{" statements "}"
 
 $publishClause: "publish" event
 
-$range: [primitive] (".." | "..<" | "<..<" | "<..") [primitive]
+$range: ("[" | "(") [primitive] ".." [primitive] (")" | "]")
 
 $recipient: name | attribute
 
