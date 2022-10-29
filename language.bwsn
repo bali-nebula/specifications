@@ -2,11 +2,16 @@ $acceptClause: "accept" message
 
 $annotation: NOTE | COMMENT
 
-$arguments: expression {"," expression}
+$arguments: "(" [expression {"," expression}] ")"
 
 $arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
 $association: primitive ":" component
+
+$associations:
+    association {"," association} |
+    EOL <association [NOTE] EOL>  |
+    ":"  ! No associations.
 
 $attribute: variable "[" indices "]"
 
@@ -14,10 +19,7 @@ $bag: expression
 
 $breakClause: "break" "loop"
 
-$catalog:
-    "[" association {"," association} "]" |
-    "[" EOL <association [NOTE] EOL> "]" |
-    "[" ":" "]"  ! An empty catalog.
+$catalog: "[" associations "]"
 
 $chaining: expression "&" expression
 
@@ -61,11 +63,11 @@ $exponential: expression "^" expression
 
 $expression:
     component   |  ! entity [context] [NOTE]
-    intrinsic   |  ! function "(" [arguments] ")"
+    intrinsic   |  ! function arguments
     variable    |  ! IDENTIFIER
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
-    invocation  |  ! expression ("." | "<~") method "(" [arguments] ")"
+    invocation  |  ! expression ("." | "<~") method arguments
     value       |  ! expression "[" indices "]"
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
@@ -82,18 +84,20 @@ $ifClause: "if" condition "do" "{" statements "}"
 
 $indices: expression {"," expression}
 
-$intrinsic: function "(" [arguments] ")"
+$intrinsic: function arguments
 
 $inversion: ("-" | "/" | "*") expression
 
-$invocation: target ("." | "<~") method "(" [arguments] ")"
+$invocation: target ("." | "<~") method arguments
 
 $item: SYMBOL
 
-$list:
-    "[" component {"," component} "]" |
-    "[" EOL <component [NOTE] EOL> "]" |
-    "[" "]"  ! An empty list.
+$items:
+    component {"," component}  |
+    EOL <component [NOTE] EOL> |
+    ! No items.
+
+$list: "[" items "]"
 
 $logical: expression ("AND" | "SANS" | "XOR" | "OR") expression
 
@@ -137,7 +141,7 @@ $parameter: name ":" component
 
 $parameters:
     parameter {"," parameter} |
-    EOL <parameter EOL>
+    EOL <parameter EOL>  ! At least one parameter is required.
 
 $pattern: expression
 
@@ -151,7 +155,7 @@ $procedure: "{" statements "}"
 
 $publishClause: "publish" event
 
-$range: ("[" | "(") [primitive] ".." [primitive] (")" | "]")
+$range: ( "[" | "(" ) [primitive] ".." [primitive] ( ")" | "]" )
 
 $recipient: name | attribute
 
