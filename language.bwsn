@@ -10,7 +10,7 @@ $association: primitive ":" component
 
 $associations:
     association {"," association} |
-    EOL <association [NOTE] EOL>  |
+    EOL <association EOL>  |
     ":"  ! No associations.
 
 $attribute: variable "[" indices "]"
@@ -31,7 +31,7 @@ $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
 $complement: "NOT" expression
 
-$component: entity [context]
+$component: entity [context] [NOTE]
 
 $condition: expression
 
@@ -94,7 +94,7 @@ $item: SYMBOL
 
 $items:
     component {"," component}  |
-    EOL <component [NOTE] EOL> |
+    EOL <component EOL> |
     ! No items.
 
 $list: "[" items "]"
@@ -175,11 +175,11 @@ $sequence: expression
 
 $source: component EOL EOF  ! EOF is the end-of-file marker.
 
-$statement: mainClause [onClause]
+$statement: [annotation EOL] [mainClause] [onClause] [NOTE]
 
 $statements:
     statement {";" statement} |
-    EOL {(annotation | statement) EOL} |
+    EOL {statement EOL} |
     ! An empty procedure.
 
 $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
