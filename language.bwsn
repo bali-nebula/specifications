@@ -33,6 +33,8 @@ $complement: "NOT" expression
 
 $component: entity [context] [NOTE]
 
+$composite: expression
+
 $condition: expression
 
 $context: "(" parameters ")"
@@ -67,8 +69,8 @@ $expression:
     variable    |  ! IDENTIFIER
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
-    invocation  |  ! expression ("." | "<-") method arguments
-    value       |  ! expression "[" indices "]"
+    invocation  |  ! target ("." | "<-") method arguments
+    item        |  ! composite "[" indices "]"
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
     inversion   |  ! ("-" | "/" | "*") expression
@@ -90,14 +92,9 @@ $inversion: ("-" | "/" | "*") expression
 
 $invocation: target ("." | "<-") method arguments
 
-$item: SYMBOL
+$item: composite "[" indices "]"
 
-$items:
-    component {"," component}  |
-    EOL <component EOL> |
-    ! No items.
-
-$list: "[" items "]"
+$list: "[" values "]"
 
 $logical: expression ("AND" | "SANS" | "XOR" | "OR") expression
 
@@ -188,13 +185,18 @@ $target: expression
 
 $throwClause: "throw" exception
 
-$value: expression "[" indices "]"
+$value: SYMBOL
+
+$values:
+    component {"," component}  |
+    EOL <component EOL> |
+    ! No components.
 
 $variable: IDENTIFIER
 
 $whileClause: "while" condition "do" procedure
 
-$withClause: "with" "each" item "in" sequence "do" procedure
+$withClause: "with" "each" value "in" sequence "do" procedure
 
 $ANGLE: "~" (REAL | ZERO)
 
