@@ -55,7 +55,7 @@ $element:
 
 $entity: element | string | collection | procedure
 
-$evaluateClause: [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
+$evaluateClause: recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=") expression
 
 $event: expression
 
@@ -101,24 +101,24 @@ $logical: expression ("AND" | "SANS" | "XOR" | "OR") expression
 $magnitude: "|" expression "|"
 
 $mainClause:
-    ifClause |
-    selectClause |
-    withClause |
-    whileClause |
-    continueClause |
-    breakClause |
-    returnClause |
-    throwClause |
-    saveClause |
-    discardClause |
-    notarizeClause |
-    checkoutClause |
-    publishClause |
-    postClause |
-    retrieveClause |
-    acceptClause |
-    rejectClause |
-    evaluateClause
+    acceptClause   |  ! "accept" message
+    breakClause    |  ! "break" "loop"
+    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
+    continueClause |  ! "continue" "loop"
+    discardClause  |  ! "discard" document
+    evaluateClause |  ! recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=") expression
+    ifClause       |  ! "if" condition "do" procedure
+    notarizeClause |  ! "notarize" document "as" moniker
+    postClause     |  ! "post" message "to" bag
+    publishClause  |  ! "publish" event
+    rejectClause   |  ! "reject" message
+    retrieveClause |  ! "retrieve" recipient "from" bag
+    returnClause   |  ! "return" result
+    saveClause     |  ! "save" document "as" recipient
+    selectClause   |  ! "select" target <"matching" pattern "do" procedure>
+    throwClause    |  ! "throw" exception
+    whileClause    |  ! "while" condition "do" procedure
+    withClause        ! "with" "each" value "in" sequence "do" procedure
 
 $message: expression
 
