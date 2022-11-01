@@ -67,7 +67,7 @@ $expression:
     variable    |  ! IDENTIFIER
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
-    invocation  |  ! expression ("." | "<~") method arguments
+    invocation  |  ! expression ("." | "<-") method arguments
     value       |  ! expression "[" indices "]"
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
@@ -88,7 +88,7 @@ $intrinsic: function arguments
 
 $inversion: ("-" | "/" | "*") expression
 
-$invocation: target ("." | "<~") method arguments
+$invocation: target ("." | "<-") method arguments
 
 $item: SYMBOL
 
@@ -220,7 +220,7 @@ $DAY: "0".."2" "1".."9" | "3" "0".."1"
 
 $DELIMITER: 
     "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" |
-    "<..<" | "<.." | "<~" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
+    "<..<" | "<.." | "<-" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
     "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
     ")" | "(" | "&"
 
