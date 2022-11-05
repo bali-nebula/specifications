@@ -6,7 +6,7 @@ $arguments: "(" [expression {"," expression}] ")"
 
 $arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
-$association: primitive ":" component
+$association: key ":" value
 
 $associations:
     association {"," association} |
@@ -94,6 +94,8 @@ $invocation: target ("." | "<-") method arguments
 
 $item: composite "[" indices "]"
 
+$key: primitive
+
 $list: "[" values "]"
 
 $logical: expression ("AND" | "SANS" | "XOR" | "OR") expression
@@ -118,7 +120,7 @@ $mainClause:
     selectClause   |  ! "select" target <"matching" pattern "do" procedure>
     throwClause    |  ! "throw" exception
     whileClause    |  ! "while" condition "do" procedure
-    withClause        ! "with" "each" value "in" sequence "do" procedure
+    withClause        ! "with" "each" segment "in" sequence "do" procedure
 
 $message: expression
 
@@ -134,7 +136,7 @@ $onClause: "on" "$exception" <"matching" pattern "do" procedure>
 
 $ordinal: expression
 
-$parameter: name ":" component
+$parameter: name ":" value
 
 $parameters:
     parameter {"," parameter} |
@@ -166,6 +168,8 @@ $returnClause: "return" result
 
 $saveClause: "save" document "as" recipient
 
+$segment: SYMBOL
+
 $selectClause: "select" target <"matching" pattern "do" procedure>
 
 $sequence: expression
@@ -185,7 +189,7 @@ $target: expression
 
 $throwClause: "throw" exception
 
-$value: SYMBOL
+$value: component
 
 $values:
     component {"," component}  |
@@ -196,7 +200,7 @@ $variable: IDENTIFIER
 
 $whileClause: "while" condition "do" procedure
 
-$withClause: "with" "each" value "in" sequence "do" procedure
+$withClause: "with" "each" segment "in" sequence "do" procedure
 
 $ANGLE: "~" (REAL | ZERO)
 
