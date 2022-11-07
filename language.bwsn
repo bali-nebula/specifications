@@ -13,7 +13,7 @@ $associations:
     EOL <association EOL>  |
     ":"  ! No associations.
 
-$attribute: variable "[" indices "]"
+$attribute: variable indices
 
 $bag: expression
 
@@ -55,7 +55,7 @@ $element:
 
 $entity: element | string | collection | procedure
 
-$evaluateClause: recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=") expression
+$evaluateClause: [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
 $event: expression
 
@@ -70,7 +70,7 @@ $expression:
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
     invocation  |  ! target ("." | "<-") method arguments
-    item        |  ! composite "[" indices "]"
+    item        |  ! composite indices
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
     inversion   |  ! ("-" | "/" | "*") expression
@@ -84,7 +84,7 @@ $function: IDENTIFIER
 
 $ifClause: "if" condition "do" procedure
 
-$indices: expression {"," expression}
+$indices: "[" expression {"," expression} "]"
 
 $intrinsic: function arguments
 
@@ -92,7 +92,7 @@ $inversion: ("-" | "/" | "*") expression
 
 $invocation: target ("." | "<-") method arguments
 
-$item: composite "[" indices "]"
+$item: composite indices
 
 $key: primitive
 
