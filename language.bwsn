@@ -108,7 +108,7 @@ $mainClause:
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
     continueClause |  ! "continue" "loop"
     discardClause  |  ! "discard" document
-    evaluateClause |  ! recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=") expression
+    evaluateClause |  ! [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
     ifClause       |  ! "if" condition "do" procedure
     notarizeClause |  ! "notarize" document "as" moniker
     postClause     |  ! "post" message "to" bag
