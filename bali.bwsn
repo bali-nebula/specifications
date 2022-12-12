@@ -1,3 +1,8 @@
+!>
+    A formal definition of Bali Document Notation (aka Bali) using
+    Bali Wirth Syntax Notation (BWSN).
+<!
+
 $acceptClause: "accept" message
 
 $annotation: NOTE | COMMENT
@@ -214,6 +219,11 @@ $whileClause: "while" condition "do" procedure
 
 $withClause: "with" "each" segment "in" sequence "do" procedure
 
+
+!>
+    TOKEN DEFINITIONS
+<!
+
 $ANGLE: "~" (REAL | ZERO)
 
 $ANY: "any"
@@ -230,7 +240,7 @@ $BINARY: "'" {BASE64 | SPACE | EOL} "'"
 
 $BOOLEAN: "false" | "true"
 
-$COMMENT: "!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"
+$COMMENT: "!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
 
 $DATES: [TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]
 

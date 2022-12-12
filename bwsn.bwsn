@@ -1,4 +1,9 @@
-$syntax: <production>
+!>
+    A formal definition of Bali Wirth Syntax Notation (BWSN) using
+    Bali Wirth Syntax Notation itself.
+<!
+
+$syntax: <production | COMMENT>
 
 $production: SYMBOL ":" rule [NOTE] <EOL>
 
@@ -16,6 +21,11 @@ $factor:
 
 $literal: "'" <~"'"> "'" | '"' <~'"'> '"'
 
+
+!>
+    TOKEN DEFINITIONS
+<!
+
 $SYMBOL: "$" IDENTIFIER
 
 $IDENTIFIER: LETTER {LETTER | DIGIT}
@@ -23,6 +33,8 @@ $IDENTIFIER: LETTER {LETTER | DIGIT}
 $CATAGORY: "LETTER" | "DIGIT"  ! The Unicode code points catagories L and N.
 
 $NOTE: "! " {~EOL}
+
+$COMMENT: "!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
 
 $EOL: "\n"
 
