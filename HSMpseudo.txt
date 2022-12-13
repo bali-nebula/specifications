@@ -1,0 +1,345 @@
+
+// IMPORTS
+crypto  // the cryptography library
+bluetooth  // the bluetooth library
+math // the math library
+
+
+// PRIVATE ATTRIBUTES
+
+// The algorithms for this version of the protocol
+let string PROTOCOL = "v1";
+let string DIGEST = "sha512";
+let string SIGNATURE = "ed25519";
+let int BLOCK_SIZE = 510;  // the maximum MTU size minus the header bytes
+let int KEY_SIZE = 32;
+let int DIG_SIZE = 64;
+let int SIG_SIZE = 64;
+
+// These are viewed from the client (mobile device) perspective
+let string UART_SERVICE_ID = "6e400001b5a3f393e0a9e50e24dcca9e";
+let string UART_WRITE_ID = "6e400002b5a3f393e0a9e50e24dcca9e";
+let string UART_NOTIFICATION_ID = "6e400003b5a3f393e0a9e50e24dcca9e";
+
+// These variables capture the state of the HSM proxy
+var Peripheral peripheral;
+var byte[KEY_SIZE] secret;
+var byte[KEY_SIZE] previousSecret;
+
+
+// PUBLIC API
+
+/**
+ * This function returns a Bali document describing the attributes of the HSM.
+ * 
+ * @returns A string describing the attributes of the HSM.
+ */
+function string toString() {
+    const string =
+        "[\n" +
+        "    $module: /bali/notary/" + PROTOCOL + "/HSM\n" +
+        "    $protocol: " + PROTOCOL + "\n" +
+        "    $digest: "' + DIGEST + '"\n" +
+        "    $signature: "' + SIGNATURE + '"\n" +
+        "]";
+    return string;
+};
+
+
+/**
+ * This function returns the version of the security protocol supported by this
+ * security module.
+ * 
+ * @returns The version of the security protocol supported by this security
+ * module.
+ */
+function string getProtocol() {
+    return PROTOCOL;
+};
+
+
+/**
+ * This function initializes the API.
+ */
+function void initializeAPI: async function() {
+    try {
+        findPeripheral();
+    } catch (cause) {
+        throw Error("The HSM could not be initialized: " + cause);
+    }
+};
+
+
+/**
+ * This function generates a new public-private key pair.
+ * 
+ * @returns A byte array containing the new public key.
+ */
+function byte[KEY_SIZE] generateKeys() {
+    try {
+        if (peripheral == null) initializeAPI();
+        secret = crypto.randomBytes(KEY_SIZE);
+        var byte[] request = formatRequest("generateKeys", secret);
+        var byte[KEY_SIZE] publicKey = processRequest(request);
+        return publicKey;
+    } catch (cause) {
+        throw Error("A new key pair could not be generated: " + cause);
+    }
+};
+
+
+/**
+ * This function replaces the existing public-private key pair with a new one.
+ * 
+ * @returns A byte array containing the new public key.
+ */
+function byte[KEY_SIZE] rotateKeys() {
+    try {
+        if (peripheral == null) initializeAPI();
+        previousSecret = secret;
+        secret = crypto.randomBytes(KEY_SIZE);
+        var byte[] request = formatRequest("rotateKeys", previousSecret, secret);
+        var byte[KEY_SIZE] publicKey = processRequest(request);
+        return publicKey;
+    } catch (cause) {
+        throw Error("The public-private key pair could not be rotated: " + cause);
+    }
+};
+
+
+/**
+ * This function deletes any existing public-private key pairs.
+ * 
+ * @returns Whether or not the keys were successfully erased.
+ */
+function boolean eraseKeys() {
+    try {
+        if (peripheral == null) initializeAPI();
+        var byte[] request = formatRequest("eraseKeys");
+        var boolean succeeded = processRequest(request);
+        return succeeded;
+    } catch (cause) {
+        throw Error("The public-private key pairs could not be erased: " + cause);
+    }
+};
+
+
+/**
+ * This function returns a cryptographically secure digital digest of the
+ * specified bytes. The generated digital digest will always be the same
+ * for the same bytes.
+ *
+ * @param bytes A byte array containing the bytes to be digested.
+ * @returns A byte array containing a digital digest of the bytes.
+ */
+function byte[DIG_SIZE] digestBytes(byte[] bytes) {
+    try {
+        if (peripheral == null) initializeAPI();
+        var byte[] request = formatRequest("digestBytes", bytes);
+        var byte[DIG_SIZE] digest = processRequest(request);
+        return digest;
+    } catch (cause) {
+        throw Error("A digest of the bytes could not be generated: " + cause);
+    }
+};
+
+
+/**
+ * This function generates a digital signature of the specified bytes using
+ * the current private key (or the old private key, one time only, if it exists).
+ * This allows a new certificate to be signed using the previous private key.
+ * The resulting digital signature can then be verified using the corresponding
+ * public key.
+ * 
+ * @param bytes A byte array containing the bytes to be digitally signed.
+ * @returns A byte array containing the resulting digital signature.
+ */
+function byte[SIG_SIZE] signBytes(byte[] bytes) {
+    try {
+        if (peripheral == null) initializeAPI();
+        var byte[] request;
+        if (previousSecret != null) {
+            // we are in the process of rotating keys so use the previous secret
+            request = formatRequest("signBytes", previousSecret, bytes);
+            previousSecret = null;  // rotation of keys is now complete
+        } else {
+            request = formatRequest("signBytes", secret, bytes);
+        }
+        var byte[SIG_SIZE] signature = processRequest(request);
+        return signature;
+    } catch (cause) {
+        throw Error("A digital signature of the bytes could not be generated: " + cause);
+    }
+};
+
+
+/**
+ * This function uses the specified public key to determine whether or not
+ * the specified digital signature was generated using the corresponding
+ * private key on the specified bytes.
+ *
+ * @param aPublicKey A byte array containing the public key to be
+ * used to validate the signature.
+ * @param signature A byte array containing the digital signature
+ * allegedly generated using the corresponding private key.
+ * @param bytes A byte array containing the digitally signed bytes.
+ * @returns Whether or not the digital signature is valid.
+ */
+function boolean validSignature(aPublicKey, signature, bytes) {
+    try {
+        if (peripheral == null) initializeAPI();
+        var byte[] request = formatRequest("validSignature", aPublicKey, signature, bytes);
+        var boolean isValid = processRequest(peripheral, request);
+        return isValid;
+    } catch (cause) {
+        throw Error("The digital signature of the bytes could not be validated: " + cause);
+    }
+};
+
+
+// PRIVATE FUNCTIONS
+
+/**
+ * This function searches for a bluetooth peripheral that implements the hardware security
+ * module (HSM). Once one is found it stops searching.
+ */
+function void findPeripheral() {
+    while (peripheral == null) {
+        peripheral = bluetooth.findService(UART_SERVICE_ID);
+        if (peripheral.localName != "ButtonUp") peripheral = null;  // keep searching
+    });
+};
+
+
+/**
+ * This function formats a request into a binary format prior to sending it via bluetooth.
+ * Each request has the following byte format:
+ *   Request (1 byte) [0..255]
+ *   Number of Arguments (1 byte) [0..255]
+ *   Length of Argument 1 (2 bytes) [0..65535]
+ *   Argument 1 ([0..65535] bytes)
+ *   Length of Argument 2 (2 bytes) [0..65535]
+ *   Argument 2 ([0..65535] bytes)
+ *      ...
+ *   Length of Argument N (2 bytes) [0..65535]
+ *   Argument N ([0..65535] bytes)
+ *
+ * If the entire request is only a single byte long then the number of arguments
+ * is assumed to be zero.
+
+ * @param type A string representing the type of the request.
+ * @param args Zero or more byte arrays containing the bytes for each argument.
+ * @returns A byte array containing the bytes for the entire request.
+ */
+function byte[] formatRequest(type, ...args) {
+    switch (type) {
+        case "generateKeys":
+            type = 1;
+            break;
+        case "rotateKeys":
+            type = 2;
+            break;
+        case "eraseKeys":
+            type = 3;
+            break;
+        case "digestBytes":
+            type = 4;
+            break;
+        case "signBytes":
+            type = 5;
+            break;
+        case "validSignature":
+            type = 6;
+            break;
+    }
+    var byte[] request = [type & 0xFF, args.length & 0xFF];  // the type and number of args
+    for each arg in args do {
+        var int length = arg.length;
+        request += [(length & 0xFF00) >> 8, length & 0xFF];  // the length of this argument
+        request += arg;  // the argument bytes
+    }
+    return request;
+};
+
+
+/**
+ * This function sends a request to a BLEUart service for processing. The response is
+ * returned from the service.
+ * 
+ * Note: A BLEUart service can only handle requests up to 512 bytes in length. If the
+ * specified request is longer than this limit, it is broken up into separate 512 byte
+ * blocks and each block is sent as a separate BLE request.
+ * 
+ * @param request A byte array containing the request to be processed.
+ * @returns A byte array containing the response from the service.
+ */
+function byte[] processRequest(request) {
+
+    // connect to the bluetooth peripheral
+    if (peripheral == null) {
+        throw Error("Their is no HSM peripheral.");
+    }
+    peripheral.connect();
+
+    // discover the input and output characteristics
+    var Characteristic input = null;
+    var Characteristic output = null;
+    var Characteristic[] characteristics = peripheral.getCharacteristics();
+    for each characteristic in characteristics do {
+        if (characteristic.uuid === UART_NOTIFICATION_ID) input = characteristic;
+        if (characteristic.uuid === UART_WRITE_ID) output = characteristic;
+    }
+    if (input == null || output == null) {
+        throw Error("The UART Service does not support the required characteristics.");
+    }
+
+    // process any extra blocks in reverse order
+    var byte[] buffer;
+    var int offset;
+    var int blockSize;
+    var int extraBlocks = math.ceil((request.length - 2) / BLOCK_SIZE) - 1;
+    var int block = extraBlocks;
+    while (block > 0) {
+        // the offset includes the header bytes
+        offset = block * BLOCK_SIZE + 2;
+
+        // calculate the current block size
+        blockSize = math.min(request.length - offset, BLOCK_SIZE);
+
+        // concatenate a header and the current block bytes
+        buffer = [0x00, block & 0xFF] + request.slice(offset, offset + blockSize);
+
+        // process the block and ignore the response
+        processBlock(input, output, buffer);
+
+        // move on to previous block
+        block--;
+    }
+
+    // now process the actual request
+    blockSize = math.min(request.length, BLOCK_SIZE + 2);
+    buffer = request.slice(0, blockSize);  // includes the actual header
+    var byte[] response = processBlock(input, output, buffer);
+    peripheral.disconnect();
+    return response;
+};
+
+
+/**
+ * This function writes a block of bytes to the input characteristic of a BLEUart service
+ * and reads the response from the output characteristic.
+ * 
+ * @param input The input characteristic for the BLEUart service.
+ * @param output The output characteristic for the BLEUart service.
+ * @param block The block of bytes to be written.
+ * @returns A byte array containing the bytes for the response from the service.
+ */
+function byte[] processBlock(Characteristic input, Characteristic output, byte[] block) {
+    var int count = output.writeBytes(block);  // count is the number of bytes written
+    var byte[] response = input.readBytes();
+    if (response.length === 1 && response[0] > 1) {
+        throw Error("Unable to read the response from a request block.");
+    }
+    return response;
+};
+
