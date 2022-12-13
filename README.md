@@ -1,4 +1,3 @@
-## Bali Nebula™
 <img src="https://craterdog.com/images/CraterDog.png" width="50%">
 
 ### _\* \* \* NOTICE \* \* \*_
