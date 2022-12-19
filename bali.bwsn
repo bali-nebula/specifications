@@ -11,7 +11,7 @@ $arguments: "(" [expression {"," expression}] ")"
 
 $arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
-$assignClause:
+$assignment:
     letClause         ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
 $association: key ":" value
@@ -49,7 +49,7 @@ $context: "(" parameters ")"
 
 $continueClause: "continue" "loop"
 
-$controlClause:
+$control:
     ifClause       |  ! "if" condition "do" procedure
     selectClause   |  ! "select" target <"matching" pattern "do" procedure>
     whileClause    |  ! "while" condition "do" procedure
@@ -67,7 +67,7 @@ $discardClause: "discard" document
 
 $document: expression
 
-$documentClause:
+$repository:
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
     saveClause     |  ! "save" document "as" recipient
     discardClause  |  ! "discard" document
@@ -127,14 +127,14 @@ $logical: expression ("AND" | "SANS" | "OR" | "XOR") expression
 $magnitude: "|" expression "|"
 
 $mainClause:
-    assignClause   |
-    controlClause  |
-    documentClause |
-    messageClause
+    control    |
+    assignment |
+    messaging  |
+    repository
 
 $message: expression
 
-$messageClause:
+$messaging:
     postClause     |  ! "post" message "to" bag
     retrieveClause |  ! "retrieve" recipient "from" bag
     acceptClause   |  ! "accept" message
