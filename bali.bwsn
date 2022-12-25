@@ -195,7 +195,7 @@ $sequence: expression
 
 $source: component EOF  ! EOF is the end-of-file marker.
 
-$statement: [annotation EOL] [mainClause] [onClause] [NOTE]
+$statement: [annotation EOL] [mainClause [onClause]] [NOTE]
 
 $statements:
     statement {";" statement} |
