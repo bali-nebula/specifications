@@ -53,7 +53,7 @@ $control:
     ifClause       |  ! "if" condition "do" procedure
     selectClause   |  ! "select" target <"matching" pattern "do" procedure>
     whileClause    |  ! "while" condition "do" procedure
-    withClause     |  ! "with" "each" segment "in" sequence "do" procedure
+    withClause     |  ! "with" "each" thing "in" sequence "do" procedure
     continueClause |  ! "continue" "loop"
     breakClause    |  ! "break" "loop"
     returnClause   |  ! "return" result
@@ -187,8 +187,6 @@ $returnClause: "return" result
 
 $saveClause: "save" document "as" recipient
 
-$segment: SYMBOL
-
 $selectClause: "select" target <"matching" pattern "do" procedure>
 
 $sequence: expression
@@ -206,6 +204,8 @@ $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
 
 $target: expression
 
+$thing: SYMBOL
+
 $throwClause: "throw" exception
 
 $value: component
@@ -219,7 +219,7 @@ $variable: IDENTIFIER
 
 $whileClause: "while" condition "do" procedure
 
-$withClause: "with" "each" segment "in" sequence "do" procedure
+$withClause: "with" "each" thing "in" sequence "do" procedure
 
 
 !>
