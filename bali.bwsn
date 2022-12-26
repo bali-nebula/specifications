@@ -11,6 +11,8 @@ $arguments: "(" [expression {"," expression}] ")"
 
 $arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
+$array: "[" values "]"
+
 $assignment:
     letClause  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
@@ -27,13 +29,11 @@ $bag: expression
 
 $breakClause: "break" "loop"
 
-$catalog: "[" associations "]"
-
 $chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
 
-$collection: catalog | list | range
+$collection: array | range | structure
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -120,8 +120,6 @@ $key: primitive
 
 $letClause: ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
-$list: "[" values "]"
-
 $logical: expression ("AND" | "SANS" | "OR" | "XOR") expression
 
 $magnitude: "|" expression "|"
@@ -201,6 +199,8 @@ $statements:
     ! An empty procedure.
 
 $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
+
+$structure: "[" associations "]"
 
 $target: expression
 
