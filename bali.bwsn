@@ -53,7 +53,7 @@ $control:
     ifClause       |  ! "if" condition "do" procedure
     selectClause   |  ! "select" target <"matching" pattern "do" procedure>
     whileClause    |  ! "while" condition "do" procedure
-    withClause     |  ! "with" "each" thing "in" sequence "do" procedure
+    withClause     |  ! "with" "each" item "in" sequence "do" procedure
     continueClause |  ! "continue" "loop"
     breakClause    |  ! "break" "loop"
     returnClause   |  ! "return" result
@@ -86,21 +86,21 @@ $exception: expression
 $exponential: expression "^" expression
 
 $expression:
-    component   |  ! entity [context] [NOTE]
-    intrinsic   |  ! function arguments
-    variable    |  ! IDENTIFIER
-    precedence  |  ! "(" expression ")"
-    dereference |  ! "@" expression
-    invocation  |  ! target ("." | "<-") method arguments
-    item        |  ! composite indices
-    chaining    |  ! expression "&" expression
-    exponential |  ! expression "^" expression
-    inversion   |  ! ("-" | "/" | "*") expression
-    arithmetic  |  ! expression ("*" | "/" | "//" | "+" | "-") expression
-    magnitude   |  ! "|" expression "|"
-    comparison  |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
-    complement  |  ! "NOT" expression
-    logical        ! expression ("AND" | "SANS" | "OR" | "XOR") expression
+    component    |  ! entity [context] [NOTE]
+    intrinsic    |  ! function arguments
+    variable     |  ! IDENTIFIER
+    precedence   |  ! "(" expression ")"
+    dereference  |  ! "@" expression
+    invocation   |  ! target ("." | "<-") method arguments
+    subcomponent |  ! composite indices
+    chaining     |  ! expression "&" expression
+    exponential  |  ! expression "^" expression
+    inversion    |  ! ("-" | "/" | "*") expression
+    arithmetic   |  ! expression ("*" | "/" | "//" | "+" | "-") expression
+    magnitude    |  ! "|" expression "|"
+    comparison   |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
+    complement   |  ! "NOT" expression
+    logical         ! expression ("AND" | "SANS" | "OR" | "XOR") expression
 
 $function: IDENTIFIER
 
@@ -113,8 +113,6 @@ $intrinsic: function arguments
 $inversion: ("-" | "/" | "*") expression
 
 $invocation: target ("." | "<-") method arguments
-
-$item: composite indices
 
 $key: primitive
 
@@ -202,9 +200,11 @@ $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
 
 $structure: "[" associations "]"
 
+$subcomponent: composite indices
+
 $target: expression
 
-$thing: SYMBOL
+$item: SYMBOL
 
 $throwClause: "throw" exception
 
@@ -219,7 +219,7 @@ $variable: IDENTIFIER
 
 $whileClause: "while" condition "do" procedure
 
-$withClause: "with" "each" thing "in" sequence "do" procedure
+$withClause: "with" "each" item "in" sequence "do" procedure
 
 
 !>
