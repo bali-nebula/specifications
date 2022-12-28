@@ -57,8 +57,6 @@ $control:
     returnClause   |  ! "return" result
     throwClause       ! "throw" exception
 
-$default: expression "?" expression
-
 $dereference: "@" expression
 
 $discardClause: "discard" document
