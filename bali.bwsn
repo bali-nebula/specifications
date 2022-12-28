@@ -11,8 +11,6 @@ $arguments: "(" [expression {"," expression}] ")"
 
 $arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
-$array: "[" values "]"
-
 $assignment:
     letClause  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
 
@@ -33,7 +31,7 @@ $chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
 
-$collection: array | range | structure
+$collection: range | series | structure
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -66,12 +64,6 @@ $dereference: "@" expression
 $discardClause: "discard" document
 
 $document: expression
-
-$repository:
-    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
-    saveClause     |  ! "save" document "as" recipient
-    discardClause  |  ! "discard" document
-    notarizeClause    ! "notarize" document "as" moniker
 
 $element:
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
@@ -114,6 +106,8 @@ $inversion: ("-" | "/" | "*") expression
 
 $invocation: target ("." | "<-") method arguments
 
+$item: SYMBOL
+
 $key: primitive
 
 $letClause: ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
@@ -145,8 +139,6 @@ $name: SYMBOL
 
 $notarizeClause: "notarize" document "as" moniker
 
-$numeric: ANGLE | DURATION | MOMENT | PERCENTAGE | PROBABILITY | REAL | RUNE
-
 $onClause: "on" "$exception" <"matching" pattern "do" procedure>
 
 $ordinal: expression
@@ -169,11 +161,17 @@ $procedure: "{" statements "}"
 
 $publishClause: "publish" event
 
-$range: ( "[" | "(" ) [numeric] ".." [numeric] ( ")" | "]" )
+$range: ( "[" | "(" ) [primitive] ".." [primitive] ( ")" | "]" )
 
 $recipient: name | attribute
 
 $rejectClause: "reject" message
+
+$repository:
+    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
+    saveClause     |  ! "save" document "as" recipient
+    discardClause  |  ! "discard" document
+    notarizeClause    ! "notarize" document "as" moniker
 
 $result: expression
 
@@ -186,6 +184,8 @@ $saveClause: "save" document "as" recipient
 $selectClause: "select" target <"matching" pattern "do" procedure>
 
 $sequence: expression
+
+$series: "[" values "]"
 
 $source: component EOF  ! EOF is the end-of-file marker.
 
@@ -203,8 +203,6 @@ $structure: "[" associations "]"
 $subcomponent: composite indices
 
 $target: expression
-
-$item: SYMBOL
 
 $throwClause: "throw" exception
 
