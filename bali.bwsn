@@ -154,7 +154,7 @@ $procedure: "{" statements "}"
 
 $publishClause: "publish" event
 
-$range: ( "[" | "(" ) [primitive] ".." [primitive] ( ")" | "]" )
+$range: ( "[" | "(" ) primitive ".." primitive ( ")" | "]" )
 
 $recipient: name | attribute
 
