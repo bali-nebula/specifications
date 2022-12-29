@@ -228,7 +228,7 @@ $BINARY: "'" {BASE64 | SPACE | EOL} "'"
 
 $BOOLEAN: "false" | "true"
 
-$COMMENT: "!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
+$COMMENT: "!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
 
 $COMPLEX: "(" (RECTANGULAR | POLAR) ")"
 
@@ -314,7 +314,7 @@ $QUOTE: '"' {RUNE} '"'
 
 $REAL: ZERO | FLOAT | INFINITY | UNDEFINED
 
-$RECTANGULAR:  FLOAT ", " FLOAT "i"
+$RECTANGULAR: FLOAT ", " FLOAT "i"
 
 $REGEX: '"' <RUNE> '"?'
 
