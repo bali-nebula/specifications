@@ -26,7 +26,7 @@ $chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
 
-$collection: range | series | structure
+$collection: range | sequence | structure
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -46,7 +46,7 @@ $control:
     ifClause       |  ! "if" condition "do" procedure
     selectClause   |  ! "select" target <"matching" pattern "do" procedure>
     whileClause    |  ! "while" condition "do" procedure
-    withClause     |  ! "with" "each" item "in" sequence "do" procedure
+    withClause     |  ! "with" "each" item "in" series "do" procedure
     continueClause |  ! "continue" "loop"
     breakClause    |  ! "break" "loop"
     returnClause   |  ! "return" result
@@ -176,9 +176,9 @@ $saveClause: "save" document "as" recipient
 
 $selectClause: "select" target <"matching" pattern "do" procedure>
 
-$sequence: expression
+$sequence: "[" values "]"
 
-$series: "[" values "]"
+$series: expression
 
 $source: component EOF  ! EOF is the end-of-file marker.
 
@@ -210,7 +210,7 @@ $variable: IDENTIFIER
 
 $whileClause: "while" condition "do" procedure
 
-$withClause: "with" "each" item "in" sequence "do" procedure
+$withClause: "with" "each" item "in" series "do" procedure
 
 $ANGLE: "~" (ZERO | MAGNITUDE)
 
