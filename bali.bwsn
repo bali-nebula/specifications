@@ -1,217 +1,3 @@
-$acceptClause: "accept" message
-
-$annotation: NOTE | COMMENT
-
-$arguments: "(" [expression {"," expression}] ")"
-
-$arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
-
-$assignment: 
-    letClause  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
-
-$association: key ":" value
-
-$associations: 
-    association {"," association} |
-    EOL <association EOL> |
-    ":"  ! No associations.
-
-$attribute: variable indices
-
-$bag: expression
-
-$breakClause: "break" "loop"
-
-$chaining: expression "&" expression
-
-$checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
-
-$collection: range | sequence | structure
-
-$comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
-
-$complement: "NOT" expression
-
-$component: entity [context] [NOTE]
-
-$composite: expression
-
-$condition: expression
-
-$context: "(" parameters ")"
-
-$continueClause: "continue" "loop"
-
-$control: 
-    ifClause       |  ! "if" condition "do" procedure
-    selectClause   |  ! "select" target <"matching" pattern "do" procedure>
-    whileClause    |  ! "while" condition "do" procedure
-    withClause     |  ! "with" "each" item "in" series "do" procedure
-    continueClause |  ! "continue" "loop"
-    breakClause    |  ! "break" "loop"
-    returnClause   |  ! "return" result
-    throwClause       ! "throw" exception
-
-$dereference: "@" expression
-
-$discardClause: "discard" document
-
-$document: expression
-
-$element: 
-    ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
-    PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG
-
-$entity: element | string | collection | procedure
-
-$event: expression
-
-$exception: expression
-
-$exponential: expression "^" expression
-
-$expression: 
-    component    |  ! entity [context] [NOTE]
-    intrinsic    |  ! function arguments
-    variable     |  ! IDENTIFIER
-    precedence   |  ! "(" expression ")"
-    dereference  |  ! "@" expression
-    invocation   |  ! target ("." | "<-") method arguments
-    subcomponent |  ! composite indices
-    chaining     |  ! expression "&" expression
-    exponential  |  ! expression "^" expression
-    inversion    |  ! ("-" | "/" | "*") expression
-    arithmetic   |  ! expression ("*" | "/" | "//" | "+" | "-") expression
-    magnitude    |  ! "|" expression "|"
-    comparison   |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
-    complement   |  ! "NOT" expression
-    logical         ! expression ("AND" | "SANS" | "OR" | "XOR") expression
-
-$function: IDENTIFIER
-
-$ifClause: "if" condition "do" procedure
-
-$indices: "[" expression {"," expression} "]"
-
-$intrinsic: function arguments
-
-$inversion: ("-" | "/" | "*") expression
-
-$invocation: target ("." | "<-") method arguments
-
-$item: SYMBOL
-
-$key: primitive
-
-$letClause: ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
-
-$logical: expression ("AND" | "SANS" | "OR" | "XOR") expression
-
-$magnitude: "|" expression "|"
-
-$mainClause: 
-    control    |
-    assignment |
-    messaging  |
-    repository
-
-$message: expression
-
-$messaging: 
-    postClause     |  ! "post" message "to" bag
-    retrieveClause |  ! "retrieve" recipient "from" bag
-    acceptClause   |  ! "accept" message
-    rejectClause   |  ! "reject" message
-    publishClause     ! "publish" event
-
-$method: IDENTIFIER
-
-$moniker: expression
-
-$name: SYMBOL
-
-$notarizeClause: "notarize" document "as" moniker
-
-$onClause: "on" "$exception" <"matching" pattern "do" procedure>
-
-$ordinal: expression
-
-$parameter: name ":" value
-
-$parameters: 
-    parameter {"," parameter} |
-    EOL <parameter EOL>  ! At least one parameter is required.
-
-$pattern: expression
-
-$postClause: "post" message "to" bag
-
-$precedence: "(" expression ")"
-
-$primitive: element | string
-
-$procedure: "{" statements "}"
-
-$publishClause: "publish" event
-
-$range: ( "[" | "(" ) primitive ".." primitive ( ")" | "]" )
-
-$recipient: name | attribute
-
-$rejectClause: "reject" message
-
-$repository: 
-    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
-    saveClause     |  ! "save" document "as" recipient
-    discardClause  |  ! "discard" document
-    notarizeClause    ! "notarize" document "as" moniker
-
-$result: expression
-
-$retrieveClause: "retrieve" recipient "from" bag
-
-$returnClause: "return" result
-
-$saveClause: "save" document "as" recipient
-
-$selectClause: "select" target <"matching" pattern "do" procedure>
-
-$sequence: "[" values "]"
-
-$series: expression
-
-$source: component EOF  ! EOF is the end-of-file marker.
-
-$statement: [annotation EOL] [mainClause [onClause] [NOTE]]
-
-$statements: 
-    statement {";" statement} |
-    EOL {statement EOL} |
-    ! An empty procedure.
-
-$string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
-
-$structure: "[" associations "]"
-
-$subcomponent: composite indices
-
-$target: expression
-
-$throwClause: "throw" exception
-
-$value: component
-
-$values: 
-    component {"," component} |
-    EOL <component EOL> |
-    ! No components.
-
-$variable: IDENTIFIER
-
-$whileClause: "while" condition "do" procedure
-
-$withClause: "with" "each" item "in" series "do" procedure
-
 $ANGLE: "~" (ZERO | MAGNITUDE)
 
 $ANY: "any"
@@ -357,4 +143,218 @@ $WEEKS: TIMESPAN "W"
 $YEAR: ZERO | ORDINAL
 
 $ZERO: "0"
+
+$acceptClause: "accept" message
+
+$annotation: NOTE | COMMENT
+
+$arguments: "(" [expression {"," expression}] ")"
+
+$arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
+
+$assignment: 
+    letClause  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
+
+$association: key ":" value
+
+$associations: 
+    association {"," association} |
+    EOL <association EOL> |
+    ":"  ! No associations.
+
+$attribute: variable indices
+
+$bag: expression
+
+$breakClause: "break" "loop"
+
+$chaining: expression "&" expression
+
+$checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
+
+$collection: series | structure
+
+$comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
+
+$complement: "NOT" expression
+
+$component: entity [context] [NOTE]
+
+$composite: expression
+
+$condition: expression
+
+$context: "(" parameters ")"
+
+$continueClause: "continue" "loop"
+
+$control: 
+    ifClause       |  ! "if" condition "do" procedure
+    selectClause   |  ! "select" target <"matching" pattern "do" procedure>
+    whileClause    |  ! "while" condition "do" procedure
+    withClause     |  ! "with" "each" item "in" sequence "do" procedure
+    continueClause |  ! "continue" "loop"
+    breakClause    |  ! "break" "loop"
+    returnClause   |  ! "return" result
+    throwClause       ! "throw" exception
+
+$dereference: "@" expression
+
+$discardClause: "discard" document
+
+$document: expression
+
+$element: 
+    ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
+    PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG
+
+$entity: element | string | range | collection | procedure
+
+$event: expression
+
+$exception: expression
+
+$exponential: expression "^" expression
+
+$expression: 
+    component    |  ! entity [context] [NOTE]
+    intrinsic    |  ! function arguments
+    variable     |  ! IDENTIFIER
+    precedence   |  ! "(" expression ")"
+    dereference  |  ! "@" expression
+    invocation   |  ! target ("." | "<-") method arguments
+    subcomponent |  ! composite indices
+    chaining     |  ! expression "&" expression
+    exponential  |  ! expression "^" expression
+    inversion    |  ! ("-" | "/" | "*") expression
+    arithmetic   |  ! expression ("*" | "/" | "//" | "+" | "-") expression
+    magnitude    |  ! "|" expression "|"
+    comparison   |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
+    complement   |  ! "NOT" expression
+    logical         ! expression ("AND" | "SANS" | "OR" | "XOR") expression
+
+$function: IDENTIFIER
+
+$ifClause: "if" condition "do" procedure
+
+$indices: "[" expression {"," expression} "]"
+
+$intrinsic: function arguments
+
+$inversion: ("-" | "/" | "*") expression
+
+$invocation: target ("." | "<-") method arguments
+
+$item: SYMBOL
+
+$key: primitive
+
+$letClause: ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
+
+$logical: expression ("AND" | "SANS" | "OR" | "XOR") expression
+
+$magnitude: "|" expression "|"
+
+$mainClause: 
+    control    |
+    assignment |
+    messaging  |
+    repository
+
+$message: expression
+
+$messaging: 
+    postClause     |  ! "post" message "to" bag
+    retrieveClause |  ! "retrieve" recipient "from" bag
+    acceptClause   |  ! "accept" message
+    rejectClause   |  ! "reject" message
+    publishClause     ! "publish" event
+
+$method: IDENTIFIER
+
+$moniker: expression
+
+$name: SYMBOL
+
+$notarizeClause: "notarize" document "as" moniker
+
+$onClause: "on" "$exception" <"matching" pattern "do" procedure>
+
+$ordinal: expression
+
+$parameter: name ":" value
+
+$parameters: 
+    parameter {"," parameter} |
+    EOL <parameter EOL>  ! At least one parameter is required.
+
+$pattern: expression
+
+$postClause: "post" message "to" bag
+
+$precedence: "(" expression ")"
+
+$primitive: element | string
+
+$procedure: "{" statements "}"
+
+$publishClause: "publish" event
+
+$range: ( "[" | "(" ) primitive ".." primitive ( ")" | "]" )
+
+$recipient: name | attribute
+
+$rejectClause: "reject" message
+
+$repository: 
+    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
+    saveClause     |  ! "save" document "as" recipient
+    discardClause  |  ! "discard" document
+    notarizeClause    ! "notarize" document "as" moniker
+
+$result: expression
+
+$retrieveClause: "retrieve" recipient "from" bag
+
+$returnClause: "return" result
+
+$saveClause: "save" document "as" recipient
+
+$selectClause: "select" target <"matching" pattern "do" procedure>
+
+$sequence: expression
+
+$series: "[" values "]"
+
+$source: component EOF  ! EOF is the end-of-file marker.
+
+$statement: [annotation EOL] [mainClause [onClause] [NOTE]]
+
+$statements: 
+    statement {";" statement} |
+    EOL {statement EOL} |
+    ! An empty procedure.
+
+$string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
+
+$structure: "[" associations "]"
+
+$subcomponent: composite indices
+
+$target: expression
+
+$throwClause: "throw" exception
+
+$value: component
+
+$values: 
+    component {"," component} |
+    EOL <component EOL> |
+    ! No components.
+
+$variable: IDENTIFIER
+
+$whileClause: "while" condition "do" procedure
+
+$withClause: "with" "each" item "in" sequence "do" procedure
 
