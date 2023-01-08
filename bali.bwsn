@@ -190,7 +190,7 @@ $chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ["at" "level" ordinal] "from" moniker
 
-$collection: series | structure
+$collection: series | mapping
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -281,6 +281,8 @@ $mainClause:
     messaging  |
     repository
 
+$mapping: "[" associations "]"
+
 $message: expression
 
 $messaging: 
@@ -356,8 +358,6 @@ $statements:
     ! An empty procedure.
 
 $string: BINARY | MONIKER | NARRATIVE | QUOTE | VERSION
-
-$structure: "[" associations "]"
 
 $subcomponent: composite indices
 
