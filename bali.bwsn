@@ -12,7 +12,7 @@ $ANGLE: "~" (ZERO | MAGNITUDE)
 
 $ANY: "any"
 
-$AUTHORITY: <~"/">
+$AUTHORITY: <~("/" | EOL)>
 
 $BASE16: "0".."9" | "a".."f"
 
@@ -51,7 +51,7 @@ $FLOAT: [SIGN] MAGNITUDE
 
 $FRACTION: "." <"0".."9">
 
-$FRAGMENT: {~">"}
+$FRAGMENT: {~(">" | EOL)}
 
 $HOUR: "0".."1" "0".."9" | "2" "0".."3"
 
@@ -96,7 +96,7 @@ $ONE: "1."
 
 $ORDINAL: "1".."9" {"0".."9"}
 
-$PATH: {~("?" | "#" | ">")}
+$PATH: {~("?" | "#" | ">" | EOL)}
 
 $PATTERN: NONE | REGEX | ANY
 
@@ -110,7 +110,7 @@ $POLAR: MAGNITUDE "e^" ANGLE "i"
 
 $PROBABILITY: FRACTION | ONE
 
-$QUERY: {~("#" | ">")}
+$QUERY: {~("#" | ">" | EOL)}
 
 $QUOTE: '"' {RUNE} '"'
 
