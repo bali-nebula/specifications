@@ -20,7 +20,7 @@ $BASE32: "0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"
 
 $BASE64: "A".."Z" | "a".."z" | "0".."9" | "+" | "/"
 
-$BINARY: "'>" EOL {BASE64 | SPACE | EOL} EOL {SPACE} "<'"
+$BINARY: "'>" EOL <<BASE64> {SPACE} EOL> {SPACE} "<'"
 
 $BOOLEAN: "false" | "true"
 
