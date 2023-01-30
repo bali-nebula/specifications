@@ -20,9 +20,11 @@ $BASE32: "0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"
 
 $BASE64: "A".."Z" | "a".."z" | "0".."9" | "+" | "/"
 
-$BINARY: "'>" EOL <{SPACE} <BASE64> EOL> {SPACE} "<'"
+$BINARY: "'>" EOL {{SPACE} <BASE64> EOL} {SPACE} "<'"
 
 $BOOLEAN: "false" | "true"
+
+$BYTECODE: "'" {INSTRUCTION {SPACE INSTRUCTION}} "'"
 
 $COMMENT: "!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
 
@@ -62,6 +64,8 @@ $IDENTIFIER: LETTER {LETTER | DIGIT}
 $IMAGINARY: [SIGN] [MAGNITUDE] "i"
 
 $INFINITY: [SIGN] ("infinity" | "∞")
+
+$INSTRUCTION: BASE16 BASE16 BASE16 BASE16
 
 $KEYWORD: 
     "accept" | "as" | "at" | "break" | "checkout" | "continue" | "discard" | "do" | "each" | "from" |
