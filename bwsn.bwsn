@@ -1,8 +1,8 @@
 !>
-A formal definition of Bali Wirth Syntax Notation™ (BWSN) using Bali Wirth
-Syntax Notation™ itself. The token names are identified by all CAPITAL
-characters and the rule names are identified by lowerCamelCase characters.
-The starting rule is "$syntax".
+    A formal definition of Bali Wirth Syntax Notation™ (BWSN) using Bali Wirth
+    Syntax Notation™ itself. The token names are identified by all CAPITAL
+    characters and the rule names are identified by lowerCamelCase characters.
+    The starting rule is "$syntax".
 <!
 
 $syntax: <production | COMMENT> EOF  ! EOF is the end-of-file marker.
