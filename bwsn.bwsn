@@ -2,10 +2,10 @@
     A formal definition of Bali Wirth Syntax Notation™ (BWSN) using Bali Wirth
     Syntax Notation™ itself. The token names are identified by all CAPITAL
     characters and the rule names are identified by lowerCamelCase characters.
-    The starting rule is "$syntax".
+    The starting rule is "$grammar".
 <!
 
-$syntax: <production | COMMENT> EOF  ! EOF is the end-of-file marker.
+$grammar: <production | COMMENT> EOF  ! EOF is the end-of-file marker.
 
 $COMMENT: "!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
 
