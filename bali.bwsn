@@ -15,17 +15,21 @@ $ANY: "any"
 
 $AUTHORITY: <~("/" | EOL)>
 
+$BASE10: "0".."9"
+
 $BASE16: "0".."9" | "a".."f"
 
 $BASE32: "0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"
 
-$BASE64: "A".."Z" | "a".."z" | "0".."9" | "+" | "/"
+$BASE64: "0".."9" | "a".."z" | "A".."Z" | "+" | "/"
 
 $BINARY: "'>" EOL {{SPACE} <BASE64> EOL} {SPACE} "<'"
 
 $BOOLEAN: "false" | "true"
 
 $BYTECODE: "'" {INSTRUCTION {SPACE INSTRUCTION}} "'"
+
+$CHARACTER: ESCAPE | ~('"' | EOL)
 
 $COMMENT: "!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.
 
@@ -46,13 +50,13 @@ $E: "e"
 
 $EOL: "\n"
 
-$ESCAPE: '\' ('\' | 'a' | 'b' | 'f' | 'n' | 'r' | 't' | 'v' | '"' | "'" | UNICODE)
+$ESCAPE: '\' (UNICODE | 'a' | 'b' | 'f' | 'n' | 'r' | 't' | 'v' | '"' | "'" | '\')
 
 $EXPONENT: "E" [SIGN] ORDINAL
 
 $FLOAT: [SIGN] MAGNITUDE
 
-$FRACTION: "." <"0".."9">
+$FRACTION: "." <BASE10>
 
 $FRAGMENT: {~(">" | EOL)}
 
@@ -117,21 +121,19 @@ $PROBABILITY: FRACTION | ONE
 
 $QUERY: {~("#" | ">" | EOL)}
 
-$QUOTE: '"' {RUNE} '"'
+$QUOTE: '"' {CHARACTER} '"'
 
 $REAL: ZERO | FLOAT | INFINITY | UNDEFINED
 
 $RECTANGULAR: FLOAT ", " FLOAT "i"
 
-$REGEX: '"' <RUNE> '"?'
+$REGEX: '"' <CHARACTER> '"?'
 
 $RESOURCE: "<" SCHEME ":" ["//" AUTHORITY] "/" PATH ["?" QUERY] ["#" FRAGMENT] ">"
 
-$RUNE: ESCAPE | ~('"' | EOL)
-
 $SCALAR: (ZERO FRACTION | ORDINAL [FRACTION]) [EXPONENT]
 
-$SCHEME: ("a".."z" | "A".."Z") {"a".."z" | "A".."Z" | "0".."9" | "+" | "-" | "."}
+$SCHEME: ("a".."z" | "A".."Z") {"0".."9" | "a".."z" | "A".."Z" | "+" | "-" | "."}
 
 $SECOND: "0".."5" "0".."9" | "6" "0".."1"
 
