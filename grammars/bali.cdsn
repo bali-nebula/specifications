@@ -204,6 +204,11 @@ $ZERO: '0'
 
 $acceptClause: "accept" message
 
+$activity:
+      statement (";" statement)*
+    | EOL (statement? EOL)+  ! Allows blank lines.
+    | " "  ! No statements.
+
 $annotation: NOTE | COMMENT
 
 $arguments: "(" (expression ("," expression)*)? ")"
@@ -385,11 +390,6 @@ $series:
 $source: component EOF  ! EOF is the end-of-file marker.
 
 $statement: (annotation EOL)? mainClause onClause? NOTE?
-
-$activity:
-      statement (";" statement)*
-    | EOL (statement? EOL)+  ! Allows blank lines.
-    | " "  ! No statements.
 
 $string: BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION
 
