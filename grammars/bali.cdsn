@@ -388,8 +388,8 @@ $statement: (annotation EOL)? mainClause onClause? NOTE?
 
 $statements:
       statement (";" statement)*
-    | EOL ((statement)? EOL)+  ! Allows blank lines.
-    | " "  ! An empty procedure.
+    | EOL (statement? EOL)+  ! Allows blank lines.
+    | " "  ! No statements.
 
 $string: BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION
 
