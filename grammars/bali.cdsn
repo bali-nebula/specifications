@@ -349,7 +349,7 @@ $precedence: "(" expression ")"
 
 $primitive: element | string
 
-$procedure: "{" statements "}"
+$procedure: "{" activity "}"
 
 $publishClause: "publish" event
 
@@ -386,7 +386,7 @@ $source: component EOF  ! EOF is the end-of-file marker.
 
 $statement: (annotation EOL)? mainClause onClause? NOTE?
 
-$statements:
+$activity:
       statement (";" statement)*
     | EOL (statement? EOL)+  ! Allows blank lines.
     | " "  ! No statements.
