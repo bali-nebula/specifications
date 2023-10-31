@@ -108,7 +108,7 @@ $MONTHS: TIMESPAN 'M'
 
 $NAME: LETTER (CONNECTOR? (LETTER | DIGIT))*
 
-$NARRATIVE: "\">" EOL (NARRATIVE | ~"<\"")* EOL SPACE* "<\""
+$NARRATIVE: "\">" EOL ANY* EOL SPACE* "<\""
 
 $NONE: "none"
 
