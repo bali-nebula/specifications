@@ -206,7 +206,7 @@ $acceptClause: "accept" message
 
 $activity:
       statement (";" statement)*
-    | EOL (statement? EOL)+  ! Allows blank lines.
+    | EOL (statement? EOL)*  ! Allows blank lines.
     | " "  ! No statements.
 
 $annotation: NOTE | COMMENT
