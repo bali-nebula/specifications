@@ -60,8 +60,6 @@ $DAY: '0'..'2' '1'..'9' | '3' '0'..'1'
 
 $DAYS: TIMESPAN 'D'
 
-$DELIMITER: "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" | ")" | "(" | "&" | "NOT" | "AND" | "SANS" | "OR" | "XOR" | "IS" | "MATCHES"
-
 $DURATION: '~' SIGN? 'P' (WEEKS | YEARS? MONTHS? DAYS? ('T' HOURS? MINUTES? SECONDS?)?)
 
 $E: 'e'
@@ -87,8 +85,6 @@ $IMAGINARY: SIGN? MAGNITUDE? 'i'
 $INFINITY: SIGN? ("infinity" | '∞')
 
 $INSTRUCTION: BASE16{4}
-
-$KEYWORD: "accept" | "as" | "at" | "break" | "checkout" | "continue" | "discard" | "do" | "each" | "from" | "if" | "in" | "let" | "level" | "loop" | "matching" | "notarize" | "on" | "post" | "publish" | "reject" | "retrieve" | "return" | "save" | "select" | "throw" | "to" | "while" | "with"
 
 $LETTER: LOWER_CASE | UPPER_CASE
 
