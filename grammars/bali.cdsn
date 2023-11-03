@@ -200,14 +200,11 @@ $ZERO: '0'
 
 $acceptClause: "accept" message
 
-$activity:
-      statement (";" statement)*
-    | EOL (statement? EOL)+  ! Allows blank lines.
-    | " "  ! No statements.
-
 $annotation: NOTE | COMMENT
 
-$arguments: "(" (expression ("," expression)*)? ")"
+$argument: expression
+
+$arguments: argument ("," argument)*
 
 $arithmetic: expression ("*" | "/" | "//" | "+" | "-") expression
 
@@ -215,7 +212,12 @@ $assignment: letClause  ! ("let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "
 
 $association: key ":" value
 
-$attribute: variable indices
+$associations:
+      association ("," association)*
+    | EOL (association EOL)+
+    | ":"  ! No associations.
+
+$attribute: variable "[" indices "]"
 
 $bag: expression
 
@@ -225,7 +227,7 @@ $chaining: expression "&" expression
 
 $checkoutClause: "checkout" recipient ("at" "level" ordinal)? "from" moniker
 
-$collection: "[" (series | mapping) "]"
+$collection: "[" (associations | values) "]"
 
 $comparison: expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
 
@@ -269,12 +271,12 @@ $exponential: expression "^" expression
 
 $expression:
       component  ! entity context? NOTE?
-    | intrinsic  ! function arguments
+    | intrinsic  ! function "(" arguments? ")"
     | variable  ! IDENTIFIER
     | precedence  ! "(" expression ")"
     | dereference  ! "@" expression
-    | invocation  ! target ("." | "<-") method arguments
-    | subcomponent  ! composite indices
+    | invocation  ! target ("." | "<-") method "(" arguments? ")"
+    | subcomponent  ! composite "[" indices "]"
     | chaining  ! expression "&" expression
     | exponential  ! expression "^" expression
     | inversion  ! ("-" | "/" | "*") expression
@@ -290,13 +292,15 @@ $function: IDENTIFIER
 
 $ifClause: "if" condition "do" procedure
 
-$indices: "[" expression ("," expression)* "]"
+$index: expression
 
-$intrinsic: function arguments
+$indices: index ("," index)*
+
+$intrinsic: function "(" arguments? ")"
 
 $inversion: ("-" | "/" | "*") expression
 
-$invocation: target ("." | "<-") method arguments
+$invocation: target ("." | "<-") method "(" arguments? ")"
 
 $item: SYMBOL
 
@@ -309,11 +313,6 @@ $logical: expression ("AND" | "SANS" | "OR" | "XOR") expression
 $magnitude: "|" expression "|"
 
 $mainClause: control | assignment | messaging | repository
-
-$mapping:
-      association ("," association)*
-    | EOL (association EOL)+
-    | ":"  ! No associations.
 
 $message: expression
 
@@ -350,7 +349,7 @@ $precedence: "(" expression ")"
 
 $primitive: element | string
 
-$procedure: "{" activity "}"
+$procedure: "{" statements "}"
 
 $publishClause: "publish" event
 
@@ -378,24 +377,29 @@ $selectClause: "select" target ("matching" pattern "do" procedure)+
 
 $sequence: expression
 
-$series:
-      component ("," component)*
-    | EOL (component EOL)+
-    | " "  ! No components.
-
 $source: component EOF  ! EOF is the end-of-file marker.
 
 $statement: (annotation EOL)? mainClause onClause? NOTE?
 
+$statements:
+      statement (";" statement)*
+    | EOL (statement? EOL)+  ! Allows blank lines.
+    | " "  ! No statements.
+
 $string: BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION
 
-$subcomponent: composite indices
+$subcomponent: composite "[" indices "]"
 
 $target: expression
 
 $throwClause: "throw" exception
 
 $value: component
+
+$values:
+      value ("," value)*
+    | EOL (value EOL)+
+    | " "  ! No values.
 
 $variable: IDENTIFIER
 
