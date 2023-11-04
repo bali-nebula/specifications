@@ -225,7 +225,7 @@ $breakClause: "break" "loop"
 
 $chaining: expression "&" expression
 
-$checkoutClause: "checkout" recipient ("at" "level" ordinal)? "from" moniker
+$checkoutClause: "checkout" recipient ("at" "level" level)? "from" moniker
 
 $collection: "[" (associations | values) "]"
 
@@ -308,6 +308,8 @@ $key: primitive
 
 $letClause: ("let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/="))? expression
 
+$level: expression
+
 $logical: expression ("AND" | "SANS" | "OR" | "XOR") expression
 
 $magnitude: "|" expression "|"
@@ -330,8 +332,6 @@ $moniker: expression
 $notarizeClause: "notarize" document "as" moniker
 
 $onClause: "on" failure ("matching" pattern "do" procedure)+
-
-$ordinal: expression
 
 $parameter: symbol ":" value
 
@@ -358,7 +358,7 @@ $recipient: symbol | attribute
 $rejectClause: "reject" message
 
 $repository:
-      checkoutClause  ! "checkout" recipient ("at" "level" ordinal)? "from" moniker
+      checkoutClause  ! "checkout" recipient ("at" "level" level)? "from" moniker
     | saveClause  ! "save" document "as" recipient
     | discardClause  ! "discard" document
     | notarizeClause  ! "notarize" document "as" moniker
