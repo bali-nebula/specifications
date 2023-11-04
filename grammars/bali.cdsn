@@ -327,15 +327,13 @@ $method: IDENTIFIER
 
 $moniker: expression
 
-$name: SYMBOL
-
 $notarizeClause: "notarize" document "as" moniker
 
 $onClause: "on" failure ("matching" pattern "do" procedure)+
 
 $ordinal: expression
 
-$parameter: name ":" value
+$parameter: symbol ":" value
 
 $parameters:
       parameter ("," parameter)*
@@ -355,7 +353,7 @@ $publishClause: "publish" event
 
 $range: ("[" | "(") primitive ".." primitive (")" | "]")
 
-$recipient: name | attribute
+$recipient: symbol | attribute
 
 $rejectClause: "reject" message
 
@@ -389,6 +387,8 @@ $statements:
 $string: BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION
 
 $subcomponent: composite "[" indices "]"
+
+$symbol: SYMBOL
 
 $target: expression
 
