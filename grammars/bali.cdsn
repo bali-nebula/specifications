@@ -24,13 +24,10 @@
      * EOF - the environment specific end-of-file marker
 
     Inversion within a token definition may only be applied to a token predicate resulting in a
-    single character.  Token inversions cannot be nested.  The following token types are scanned for
-    in the order listed below.
+    single character.  Token inversions cannot be nested.
 <!
 
 $ANGLE: '~' (ZERO | MAGNITUDE)
-
-$ANY: "any"
 
 $AUTHORITY: ~('/' | CONTROL)+
 
@@ -53,8 +50,6 @@ $CHARACTER: ESCAPE | ~('"' | CONTROL)
 $COMMENT: "!>" EOL ANY* EOL SPACE* "<!"
 
 $COMPLEX: '(' (RECTANGULAR | POLAR) ')'
-
-$CONNECTOR: '+' | '-' | '.'
 
 $DAY: '0'..'2' '1'..'9' | '3' '0'..'1'
 
@@ -96,17 +91,13 @@ $MINUTES: TIMESPAN 'M'
 
 $MOMENT: '<' SIGN? YEAR ('-' MONTH ('-' DAY ('T' HOUR (':' MINUTE (':' SECOND FRACTION?)?)?)?)?)? '>'
 
-$MONIKER: ('/' NAME)+
-
 $MONTH: '0' '1'..'9' | '1' '0'..'2'
 
 $MONTHS: TIMESPAN 'M'
 
-$NAME: LETTER (CONNECTOR? (LETTER | DIGIT))*
+$NAME: ('/' IDENTIFIER)+
 
-$NARRATIVE: "\">" EOL ANY* EOL SPACE* "<\""
-
-$NONE: "none"
+$NARRATIVE: '"' '>' EOL ANY* EOL SPACE* '<' '"'
 
 $NOTE: "! " (~CONTROL)*
 
@@ -118,7 +109,7 @@ $ORDINAL: '1'..'9' '0'..'9'*
 
 $PATH: ~('?' | '#' | '>' | CONTROL)*
 
-$PATTERN: NONE | REGEX | ANY
+$PATTERN: "none" | REGEX | "any"
 
 $PERCENTAGE: REAL '%'
 
@@ -194,8 +185,7 @@ $ZERO: '0'
      * predicate+ - One or more instances of the specified predicate (equivalent to predicate{1..}).
 
     Inversion within a rule definition may only be applied to a token predicate resulting in a
-    single token.  Rule inversions cannot be nested.  The following rules are attempted in the order
-    listed below.
+    single token.  Rule inversions cannot be nested.
 <!
 
 $acceptClause: "accept" message
@@ -225,7 +215,7 @@ $breakClause: "break" "loop"
 
 $chaining: expression "&" expression
 
-$checkoutClause: "checkout" recipient ("at" "level" level)? "from" moniker
+$checkoutClause: "checkout" recipient ("at" "level" level)? "from" name
 
 $collection: "[" (associations | values) "]"
 
@@ -245,7 +235,7 @@ $continueClause: "continue" "loop"
 
 $control:
       ifClause  ! "if" condition "do" procedure
-    | selectClause  ! "select" target ("matching" pattern "do" procedure)+
+    | selectClause  ! "select" target ("matching" template "do" procedure)+
     | whileClause  ! "while" condition "do" procedure
     | withClause  ! "with" "each" item "in" sequence "do" procedure
     | continueClause  ! "continue" "loop"
@@ -327,19 +317,17 @@ $messaging:
 
 $method: IDENTIFIER
 
-$moniker: expression
+$name: expression
 
-$notarizeClause: "notarize" document "as" moniker
+$notarizeClause: "notarize" document "as" name
 
-$onClause: "on" failure ("matching" pattern "do" procedure)+
+$onClause: "on" failure ("matching" template "do" procedure)+
 
-$parameter: symbol ":" value
+$parameter: SYMBOL ":" value
 
 $parameters:
       parameter ("," parameter)*
     | EOL (parameter EOL)+  ! At least one parameter is required.
-
-$pattern: expression
 
 $postClause: "post" message "to" bag
 
@@ -353,15 +341,15 @@ $publishClause: "publish" event
 
 $range: ("[" | "(") primitive ".." primitive ("]" | ")")
 
-$recipient: symbol | attribute
+$recipient: SYMBOL | attribute
 
 $rejectClause: "reject" message
 
 $repository:
-      checkoutClause  ! "checkout" recipient ("at" "level" level)? "from" moniker
+      checkoutClause  ! "checkout" recipient ("at" "level" level)? "from" name
     | saveClause  ! "save" document "as" recipient
     | discardClause  ! "discard" document
-    | notarizeClause  ! "notarize" document "as" moniker
+    | notarizeClause  ! "notarize" document "as" name
 
 $result: expression
 
@@ -371,7 +359,7 @@ $returnClause: "return" result
 
 $saveClause: "save" document "as" recipient
 
-$selectClause: "select" target ("matching" pattern "do" procedure)+
+$selectClause: "select" target ("matching" template "do" procedure)+
 
 $sequence: expression
 
@@ -384,13 +372,13 @@ $statements:
     | EOL (statement? EOL)+  ! Allows blank lines.
     | " "  ! No statements.
 
-$string: BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION
+$string: BINARY | BYTECODE | NAME | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION
 
 $subcomponent: composite "[" indices "]"
 
-$symbol: SYMBOL
-
 $target: expression
+
+$template: expression
 
 $throwClause: "throw" exception
 

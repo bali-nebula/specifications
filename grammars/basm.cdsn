@@ -28,19 +28,17 @@
     in the order listed below.
 <!
 
-$LABEL: (NUMBER '.')+ NAME
+$LABEL: (ORDINAL '.')+ IDENTIFIER
 
-$NUMBER: '1'..'9' '0'..'9'*
+$ORDINAL: '1'..'9' '0'..'9'*
 
-$LITERAL: "`" ANY* "`"
-
-$SYMBOL: '$' NAME ('-' NUMBER)?
-
-$NOTE: "! " (~CONTROL)*
-
-$NAME: LETTER (LETTER | DIGIT)*
+$IDENTIFIER: LETTER (LETTER | DIGIT)*
 
 $LETTER: LOWER_CASE | UPPER_CASE
+
+$SYMBOL: '$' IDENTIFIER ('-' ORDINAL)?
+
+$LITERAL: '`' ANY* '`'
 
 
 !>
@@ -64,13 +62,11 @@ $LETTER: LOWER_CASE | UPPER_CASE
     listed below.
 <!
 
-$document: instructions EOF
+$source: instruction* EOF  ! EOF is the end-of-file marker.
 
-$instructions: instruction*
+$instruction: prefix? action
 
-$instruction: label? action
-
-$label: LABEL ":"
+$prefix: LABEL ":"
 
 $action: note | jump | push | pull | load | save | drop | call | send
 
@@ -79,7 +75,7 @@ $action: note | jump | push | pull | load | save | drop | call | send
     Information only, no action occurs.
 <!
 
-$note: "NOTE" NOTE
+$note: "NOTE" (~CONTROL)*
 
 
 !>
@@ -137,7 +133,7 @@ $drop: "DROP" ("VARIABLE" | "DOCUMENT" | "CONTRACT" | "MESSAGE") SYMBOL
     replaces the arguments that were on the top of the component stack.
 <!
 
-$call: "CALL" SYMBOL ("WITH" ("1" "ARGUMENT" | NUMBER "ARGUMENTS"))?
+$call: "CALL" SYMBOL ("WITH" ("1" "ARGUMENT" | ORDINAL "ARGUMENTS"))?
 
 
 !>
