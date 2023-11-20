@@ -47,6 +47,8 @@ $BYTECODE: "'" (INSTRUCTION (SPACE INSTRUCTION)*)? "'"
 
 $CHARACTER: ESCAPE | ~('"' | CONTROL)
 
+$CITATION: NAME '/' VERSION
+
 $COMMENT: "!>" EOL ANY* EOL SPACE* "<!"
 
 $COMPLEX: '(' (RECTANGULAR | POLAR) ')'
@@ -215,7 +217,9 @@ $breakClause: "break" "loop"
 
 $chaining: expression "&" expression
 
-$checkoutClause: "checkout" recipient ("at" "level" level)? "from" name
+$checkoutClause: "checkout" recipient ("at" "level" level)? "from" citation
+
+$citation: expression
 
 $collection: "[" (associations | values) "]"
 
@@ -249,7 +253,7 @@ $discardClause: "discard" document
 
 $document: expression
 
-$element: ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE | PROBABILITY | RESOURCE
+$element: ANGLE | BOOLEAN | CITATION | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE | PROBABILITY | RESOURCE
 
 $entity: element | string | range | collection | procedure
 
@@ -317,9 +321,7 @@ $messaging:
 
 $method: IDENTIFIER
 
-$name: expression
-
-$notarizeClause: "notarize" document "as" name
+$notarizeClause: "notarize" document "as" citation
 
 $onClause: "on" failure ("matching" template "do" procedure)+
 
@@ -346,10 +348,10 @@ $recipient: SYMBOL | attribute
 $rejectClause: "reject" message
 
 $repository:
-      checkoutClause  ! "checkout" recipient ("at" "level" level)? "from" name
+      checkoutClause  ! "checkout" recipient ("at" "level" level)? "from" citation
     | saveClause  ! "save" document "as" recipient
     | discardClause  ! "discard" document
-    | notarizeClause  ! "notarize" document "as" name
+    | notarizeClause  ! "notarize" document "as" citation
 
 $result: expression
 
