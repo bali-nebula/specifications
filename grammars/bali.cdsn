@@ -39,9 +39,9 @@ $Generics: "(" Parameter+ ")"
 
 $Parameter: symbol ":" Constraint
 
-$Constraint: Metadata Generics?
+$Constraint: Literal Generics?
 
-$Metadata:
+$Literal:
     Element
     Sequence
     Range
@@ -91,11 +91,11 @@ $Empty: "[:]"
 
 $Attributes: "[" Association+ "]"
 
-$Association: Primitive ":" Content
+$Association: Primitive ":" Entry
 
-$Items: "[" Content* "]"
+$Items: "[" Entry* "]"
 
-$Content: Component note?
+$Entry: Component note?
 
 $Procedure: "{" Line* "}"
 
@@ -204,7 +204,7 @@ $Invocation:
 
 $Argument:
     Value
-    Primitive
+    Literal
 
 $SendClause: "send" Message "to" Bag
 
