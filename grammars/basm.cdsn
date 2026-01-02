@@ -1,6 +1,6 @@
 !>
 ................................................................................
-.    Copyright (c) 2009-2025 Crater Dog Technologies.  All Rights Reserved.    .
+.    Copyright (c) 2009-2026 Crater Dog Technologies™.  All Rights Reserved.   .
 ................................................................................
 .  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.               .
 .                                                                              .
@@ -22,7 +22,7 @@ For more information on CDSN see the wiki at:
 │                               RULE DEFINITIONS                               │
 └──────────────────────────────────────────────────────────────────────────────┘
 <!
-$Assembly: Instruction+
+$Method: Instruction+
 
 $Instruction: Prefix? Action
 
@@ -40,16 +40,16 @@ $Action:
     Call
     Send
 
-$Note: "NOTE" comment
+$Note: "NOTE" description
 
 $Skip: "SKIP"
 
-$Jump: "JUMP TO" label Conditionally?
+$Jump: "JUMP TO" label Condition?
 
-$Conditionally:
+$Condition:
+    "ON EMPTY"
     "ON NONE"
     "ON FALSE"
-    "ON EMPTY"
 
 $Push: "PUSH" Source
 
@@ -82,32 +82,32 @@ $Save: "SAVE" Component symbol
 $Drop: "DROP" Component symbol
 
 $Component:
-    "DRAFT"
-    "CONTRACT"
     "VARIABLE"
+    "DRAFT"
+    "DOCUMENT"
     "MESSAGE"
 
-$Call: "CALL" symbol Cardinality?
+$Call: "CALL" symbol Context?
 
-$Cardinality:
+$Context:
     "WITH 1 ARGUMENT"
     "WITH 2 ARGUMENTS"
     "WITH 3 ARGUMENTS"
 
-$Send: "SEND" symbol "TO" Destination Parameterized?
+$Send: "SEND" symbol "TO" Destination
 
 $Destination:
     "COMPONENT"
-    "CONTRACT"
-
-$Parameterized: "WITH ARGUMENTS"
+    "COMPONENT WITH ARGUMENTS"
+    "DOCUMENT"
+    "DOCUMENT WITH ARGUMENTS"
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                            EXPRESSION DEFINITIONS                            │
 └──────────────────────────────────────────────────────────────────────────────┘
 <!
-$comment: "--" ~[CONTROL]*
+$description: "! " ~[CONTROL]*
 
 $label: (ORDINAL '.')+ IDENTIFIER
 

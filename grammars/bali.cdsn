@@ -1,6 +1,6 @@
 !>
 ................................................................................
-.    Copyright (c) 2009-2025 Crater Dog Technologies.  All Rights Reserved.    .
+.    Copyright (c) 2009-2026 Crater Dog Technologies™.  All Rights Reserved.   .
 ................................................................................
 .  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.               .
 .                                                                              .
@@ -22,26 +22,28 @@ For more information on CDSN see the wiki at:
 │                               RULE DEFINITIONS                               │
 └──────────────────────────────────────────────────────────────────────────────┘
 <!
-$Document: Component
+$Document: Heading? Component
 
-$Component: Entity Parameterization?
+$Heading: comment
+
+$Component: Entity Generics?
 
 $Entity:
     Element
-    String
+    Sequence
     Range
     Collection
     Procedure
 
-$Parameterization: "(" Parameter+ ")"
+$Generics: "(" Parameter+ ")"
 
 $Parameter: symbol ":" Constraint
 
-$Constraint: Metadata Parameterization?
+$Constraint: Metadata Generics?
 
 $Metadata:
     Element
-    String
+    Sequence
     Range
 
 $Element:
@@ -54,19 +56,19 @@ $Element:
     number
     probability
     resource
-    symbol
 
-$String:
+$Sequence:
     binary
     bytecode
     name
     narrative
     pattern
     quote
+    symbol
     tag
     version
 
-$Range: Left Primitive ".." Primitive Right
+$Range: Left Primitive? ".." Primitive? Right
 
 $Left:
     "["
@@ -78,19 +80,22 @@ $Right:
 
 $Primitive:
     Element
-    String
+    Sequence
 
 $Collection:
+    Empty
     Attributes
     Items  ! Must be after attributes.
 
+$Empty: "[:]"
+
 $Attributes: "[" Association+ "]"
 
-$Association: Primitive ":" Object
+$Association: Primitive ":" Content
 
-$Items: "[" Object* "]"
+$Items: "[" Content* "]"
 
-$Object: Component note?
+$Content: Component note?
 
 $Procedure: "{" Line* "}"
 
@@ -106,17 +111,13 @@ $Statement: MainClause OnClause?
 
 $MainClause:
     FlowControl
-    ActionInduction
+    LocalTransformation
     MessageHandling
     RepositoryAccess
 
-$OnClause: "on" Failure MatchingClause+
+$OnClause: "on" symbol MatchingClause+
 
-$Failure: symbol
-
-$MatchingClause: "matching" Template "do" Procedure
-
-$Template: Expression
+$MatchingClause: "matching" Expression "do" Procedure
 
 $FlowControl:
     IfClause
@@ -128,42 +129,53 @@ $FlowControl:
     ReturnClause
     ThrowClause
 
-$ActionInduction:
-    DoClause
-    LetClause
+$LocalTransformation:
+    DefineClause
+    AssignClause
+    InvokeClause
 
 $MessageHandling:
-    PostClause
-    RetrieveClause
+    SendClause
+    ReceiveClause
     AcceptClause
     RejectClause
     PublishClause
 
 $RepositoryAccess:
-    CheckoutClause
     SaveClause
+    RetrieveClause
     DiscardClause
     NotarizeClause
+    InspectClause
+    CheckoutClause
 
-$IfClause: "if" Condition "do" Procedure
-
-$Condition: Expression
+$IfClause: "if" Expression "do" Procedure
 
 $SelectClause: "select" Expression MatchingClause+
 
-$Function: identifier "(" Argument* ")"
+$WhileClause: "while" Expression "do" Procedure
 
-$Method: identifier Invoke identifier "(" Argument* ")"
+$WithClause: "with" "each" symbol "in" Expression "do" Procedure
 
-$Invoke:
-    "<-"  ! The method is invoked synchronously.
-    "<~"  ! The method is invoked asynchronously.
+$ContinueClause: "continue" "loop"
 
-$Argument:
-    Value
-    Primitive
+$BreakClause: "break" "loop"
 
-$Value: identifier
+$ReturnClause: "return" Expression
+
+$ThrowClause: "throw" Expression
+
+$DefineClause: "define" Constant "as" Expression
+
+$Constant: symbol
+
+$AssignClause: "assign" Recipient Assignment Expression
+
+$Recipient:
+    Variable
+    Subcomponent
+
+$Variable: symbol
 
 $Subcomponent: identifier "[" Index+ "]"
 
@@ -171,71 +183,62 @@ $Index:
     Value
     Primitive
 
-$WhileClause: "while" Condition "do" Procedure
-
-$WithClause: "with" "each" Variable "in" Sequence "do" Procedure
-
-$Variable: symbol
-
-$Sequence: Expression
-
-$ContinueClause: "continue" "loop"
-
-$BreakClause: "break" "loop"
-
-$ReturnClause: "return" Result
-
-$Result: Expression
-
-$ThrowClause: "throw" Exception
-
-$Exception: Expression
-
-$DoClause: "do" Method
-
-$LetClause: "let" Recipient Assignment Expression
+$Value: identifier
 
 $Assignment:
+    "?="  ! Assign a default value if not already initialized.
     ":="
-    "?="
     "+="
     "-="
     "*="
     "/="
+    "&="
 
-$Recipient:
-    Variable
-    Subcomponent
+$InvokeClause: "invoke" Method
 
-$PostClause: "post" Message "to" Bag
+$Method: identifier Invocation identifier "(" Argument* ")"
+
+$Invocation:
+    "<-"  ! The method is invoked synchronously.
+    "<~"  ! The method is invoked asynchronously.
+
+$Argument:
+    Value
+    Primitive
+
+$SendClause: "send" Message "to" Bag
+
+$ReceiveClause: "receive" Recipient "from" Bag  ! Returns a message.
+
+$AcceptClause: "accept" Message "from" Bag
+
+$RejectClause: "reject" Message "from" Bag
+
+$PublishClause: "publish" Message
 
 $Message: Expression
 
-$Bag: Expression
+$Bag: Expression  ! The global name of the message bag.
 
-$RetrieveClause: "retrieve" Recipient "from" Bag
+$SaveClause: "save" Draft "to" Recipient  ! The recipient receives a citation.
 
-$AcceptClause: "accept" Message
+$RetrieveClause: "retrieve" Recipient "from" Citation
 
-$RejectClause: "reject" Message
-
-$PublishClause: "publish" Event
-
-$Event: Expression
-
-$CheckoutClause: "checkout" Recipient AtLevel? "from" Location
-
-$AtLevel: "at" "level" Expression
-
-$Location: Expression
-
-$SaveClause: "save" Draft "to" Location
+$DiscardClause: "discard" Citation
 
 $Draft: Expression
 
-$DiscardClause: "discard" Location
+$Citation: Expression  ! A citation to a draft document.
 
-$NotarizeClause: "notarize" Draft "at" Location
+$NotarizeClause: "notarize" Draft "as" Location  ! The draft becomes a document.
+
+$InspectClause: "inspect" Recipient "at" Location
+
+$CheckoutClause: "checkout" Recipient AtLevel? "from" Location  ! Returns a draft.
+
+$Location: Expression  ! The global name of a document.
+
+$AtLevel: "at" "level" Expression
 
 $Expression: Subject Predicate*
 
@@ -251,38 +254,6 @@ $Subject:
     Method
     Value  ! This must be last since others also begin with an identifier.
 
-$Predicate: Operator Expression
-
-$Operator:
-    LexicalOperator
-    LogicalOperator
-    ArithmeticOperator
-    ComparisonOperator
-
-$LexicalOperator:
-    "&"
-
-$LogicalOperator:
-    "and"
-    "san"
-    "ior"
-    "xor"
-
-$ArithmeticOperator:
-    "+"
-    "-"
-    "*"
-    "/"
-    "%"
-    "^"
-
-$ComparisonOperator:
-    "<"
-    "="
-    ">"
-    "is"
-    "matches"
-
 $Precedence: "(" Expression ")"
 
 $Referent: "@" Reference
@@ -295,9 +266,9 @@ $Reference:
     Method
     Value  ! This must be last since others also begin with an identifier.
 
-$Complement: "not" Logical
+$Complement: "not" Reversible
 
-$Logical:
+$Reversible:
     Component
     Subcomponent
     Precedence
@@ -327,6 +298,40 @@ $Numerical:
 
 $Magnitude: "|" Expression "|"
 
+$Function: identifier "(" Argument* ")"
+
+$Predicate: Operator Expression
+
+$Operator:
+    Comparison
+    Logical
+    Arithmetic
+    Lexical
+
+$Comparison:
+    "<"
+    "="
+    ">"
+    "is"
+    "matches"
+
+$Logical:
+    "and"
+    "san"
+    "ior"
+    "xor"
+
+$Arithmetic:
+    "+"
+    "-"
+    "*"
+    "/"
+    "%"
+    "^"
+
+$Lexical:
+    "&"
+
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                            EXPRESSION DEFINITIONS                            │
@@ -346,9 +351,9 @@ $duration: "~P" (WEEKS | (YEARS? MONTHS? DAYS? ('T' HOURS? MINUTES? SECONDS?)?))
 
 $glyph: "'" (ESCAPE | ~[CONTROL]) "'"
 
-$moment: '<' SIGN? YEAR ('-' MONTH ('-' DAY ('T' HOUR (':' MINUTE (':' SECOND FRACTION?)?)?)?)?)? '>'
+$moment: '<' SIGN? YEAR '-' MONTH '-' DAY ('T' HOUR (':' MINUTE (':' SECOND FRACTION?)?)?)? '>'
 
-$name: ('/' (LETTER | DIGIT | '-')+)+
+$name: ('/' FOLDER)+
 
 $narrative: "\">" EOL (ANY | EOL)+ EOL SPACE* "<\""  ! Chooses the shortest match.
 
@@ -372,7 +377,7 @@ $version: 'v' ORDINAL ('.' ORDINAL)*
 
 $number: POLAR | RECTANGULAR | IMAGINARY | REAL  ! Must be after other numerics.
 
-$identifier: LETTER (LETTER | DIGIT | '-')*  ! Must be last alphanumeric expression.
+$identifier: LETTER (LETTER | DIGIT | '-')*  ! Must be after other alphanumerics.
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -406,6 +411,8 @@ $ESCAPE: '\' (UNICODE | ['a' 'b' 'f' 'n' 'r' 't' 'v' '\'])
 $EXPONENT: 'E' SIGN? ORDINAL
 
 $FLOAT: SIGN? AMPLITUDE
+
+$FOLDER: ALPHANUMERIC (('-' | '.')? ALPHANUMERIC)+
 
 $FRACTION: '.' BASE10+
 
